@@ -34,14 +34,14 @@ const LocationScreen = (props) => {
   }, []);
 
   const handleNavigation = () => {
-    if(isCompleted){
+    if (isCompleted) {
       dispatch(
         surveyActions.addInformation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: location.coords.latitude.toString(),
+          longitude: location.coords.longitude.toString(),
         })
       );
-      props.navigation.navigate('Summary')
+      props.navigation.navigate('Summary');
     }
   };
 
