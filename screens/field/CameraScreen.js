@@ -11,6 +11,11 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+
+//useSelector for persistence, might need to add to the back button too
+import { useSelector, useDispatch } from 'react-redux';
+import * as surveyActions from '../../store/actions/survey';
+
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -35,10 +40,13 @@ const CameraScreen = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     imageRoll[0] != null ? setIsCompleted(true) : setIsCompleted(false);
   }, [imageRoll]);
 
+  //getting permission to use Camera
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestPermissionsAsync();
@@ -50,6 +58,7 @@ const CameraScreen = (props) => {
     })();
   }, []);
 
+  //no permission handlers
   if (hasCameraPermission === null || hasGalleryPermission === null) {
     return <View />;
   }
@@ -57,20 +66,20 @@ const CameraScreen = (props) => {
     return <Text>No access to camera and gallery</Text>;
   }
 
-  const handleNavigation = () => {
-    isCompleted ? props.navigation.navigate('Location') : undefined;
-  };
-
+  //taking up to 3 pictures
   const handlePicture = async () => {
     if (camera && imageRoll.length < 3) {
       const data = await camera.takePictureAsync(null);
       console.log(data.uri);
+      //adding to the end of the array
       setImageRoll([...imageRoll, data.uri]);
       console.log(imageRoll);
     }
   };
 
+  //getting an image from the users camera roll
   const pickImage = async () => {
+    if (camera && imageRoll.length < 3) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -83,14 +92,29 @@ const CameraScreen = (props) => {
     if (!result.cancelled) {
       setImageRoll([...imageRoll, result.uri]);
     }
+  }
   };
 
+  //removes selected image from array
   const handleDeletedImage = (imageUri) => {
     setImageRoll((prev) => {
       const filteredArray = prev.filter((val, index) => val != imageUri);
       console.log(filteredArray);
       return filteredArray;
     });
+  };
+
+  
+  const handleNavigation = () => {
+    if(isCompleted){
+      //dispatch the action before navigating
+      dispatch(
+        surveyActions.addInformation({
+          images: imageRoll
+        })
+      );
+      props.navigation.navigate('Location')
+    } 
   };
 
   return (

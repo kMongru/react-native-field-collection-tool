@@ -6,6 +6,7 @@ import Colors from '../constants/Colors';
 /*  expected props
 
   isDisabled - controls what state the button is in
+  buttonName - displayed name within the button
   onPress - the method attached to the touchable opacity
   disabledStyle - additional disabled style
   enabledStyle - additional enabled style

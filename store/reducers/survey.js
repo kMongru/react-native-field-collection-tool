@@ -12,7 +12,8 @@ const initialState = {
   hotspotDecription: '',
   otherNotes: '',
   images: [],
-  location: '',
+  latitute: 0.0,
+  longitute: 0.0,
   dateAndTime: '',
 };
 

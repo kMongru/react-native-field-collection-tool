@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Pressable, Image } from 'react-native';
+//use selector in the textForm??
+import { useSelector, useDispatch } from 'react-redux';
+import * as surveyActions from '../../store/actions/survey';
 import * as Location from 'expo-location';
 
 import Dots from 'react-native-dots-pagination';
@@ -11,11 +14,14 @@ import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../../constants/Screen';
 const LocationScreen = (props) => {
   //set to false, prototyping is true for now
   const [isCompleted, setCompleted] = useState(true);
+  //for the UI of the component
   const [useLocation, setUseLocation] = useState(false);
 
   //from expo docs, location.coords.latitude and location.coords.longitude
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -28,16 +34,26 @@ const LocationScreen = (props) => {
   }, []);
 
   const handleNavigation = () => {
-    isCompleted ? props.navigation.navigate('Summary') : undefined;
+    if(isCompleted){
+      dispatch(
+        surveyActions.addInformation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        })
+      );
+      props.navigation.navigate('Summary')
+    }
   };
 
   const handleLocation = async () => {
     if (errorMsg === null && useLocation != true) {
       let location = await Location.getCurrentPositionAsync({});
+      //take these out later
       console.log(`long: ${location.coords.longitude}`);
       console.log(`lat: ${location.coords.latitude}`);
       setLocation(location);
       setUseLocation(true);
+      setCompleted(true);
     } else {
       console.log('already have location!');
     }
