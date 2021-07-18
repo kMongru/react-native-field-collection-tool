@@ -10,12 +10,14 @@ import {
   Pressable,
   Image,
 } from 'react-native';
+
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
 
 import Dots from 'react-native-dots-pagination';
 
+import Popup from '../../components/Popup';
 import MultipleChoiceButton from '../../components/MutipleChoiceButton';
 import TextSpeechForm from '../../components/TextSpeechForms/TextSpeechForm';
 import NextButton from '../../components/NextButton';
@@ -26,7 +28,6 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const InputFormsScreen = (props) => {
   const [isCompleted, setCompleted] = useState(false);
-
   //mutiple choice selection
   const [selectedChoice, setSelectedChoice] = useState(null);
   //text/audio information, either string or uri
@@ -34,6 +35,9 @@ const InputFormsScreen = (props) => {
   const [controlMethods, setControlMethods] = useState(null);
   const [hotspotDecription, setHotspotDecription] = useState(null);
   const [otherNotes, setOtherNotes] = useState(null);
+
+  //information header button
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     //need to change so value goes back to null or false after
@@ -56,6 +60,7 @@ const InputFormsScreen = (props) => {
   //getting values (text or uri) from children textSpeechForm component
   const handleCropSelection = (value) => {
     console.log('in the loop');
+    //need more logical for selecting then unselecting
     setSelectedChoice((prev) => (prev === value ? prev : value));
     console.log(selectedChoice);
   };
@@ -94,10 +99,22 @@ const InputFormsScreen = (props) => {
         })
       );
       return props.navigation.navigate('Camera');
-    } else {
-      return undefined;
     }
   };
+
+  //allowing header component to interact with screen components
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+          <Image
+            source={require('../../assets/info.png')}
+            style={styles.informationLogo}
+          />
+        </Pressable>
+      ),
+    });
+  }, [props.navigation]);
 
   return (
     <View style={styles.screen}>
@@ -161,9 +178,21 @@ const InputFormsScreen = (props) => {
           </ScrollView>
         </KeyboardAvoidingView>
         <View style={styles.bottomCard}>
-          <NextButton onPress={handleNavigation} isDisabled={!isCompleted} />
+          <NextButton
+            onPress={handleNavigation}
+            isDisabled={!isCompleted}
+            nextArrow={true}
+          />
         </View>
       </View>
+      {/* Information Popup */}
+      <Popup
+        modalText={
+          'You can click on the titles of each section, such as "Cultivar" for additional information!'
+        }
+        modalVisible={modalVisible}
+        onPress={() => setModalVisible(!modalVisible)}
+      />
     </View>
   );
 };
@@ -184,14 +213,6 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
-    headerRight: () => (
-      <Pressable onPress={() => {}}>
-        <Image
-          source={require('../../assets/info.png')}
-          style={styles.informationLogo}
-        />
-      </Pressable>
-    ),
   };
 };
 

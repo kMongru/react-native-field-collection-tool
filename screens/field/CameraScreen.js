@@ -21,6 +21,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import Dots from 'react-native-dots-pagination';
 
+import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../../constants/Screen';
@@ -40,6 +41,9 @@ const CameraScreen = (props) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
+  //information header button
+  const [informationModalVisible, setInformationModalVisible] = useState(false);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,6 +61,22 @@ const CameraScreen = (props) => {
       setHasGalleryPermission(galleryStatus.status === 'granted');
     })();
   }, []);
+
+  //allowing header component to interact with screen components
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={() => setInformationModalVisible(!informationModalVisible)}
+        >
+          <Image
+            source={require('../../assets/info.png')}
+            style={styles.informationLogo}
+          />
+        </Pressable>
+      ),
+    });
+  }, [props.navigation]);
 
   //no permission handlers
   if (hasCameraPermission === null || hasGalleryPermission === null) {
@@ -80,19 +100,19 @@ const CameraScreen = (props) => {
   //getting an image from the users camera roll
   const pickImage = async () => {
     if (camera && imageRoll.length < 3) {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    console.log(result);
+      console.log(result);
 
-    if (!result.cancelled) {
-      setImageRoll([...imageRoll, result.uri]);
+      if (!result.cancelled) {
+        setImageRoll([...imageRoll, result.uri]);
+      }
     }
-  }
   };
 
   //removes selected image from array
@@ -104,17 +124,16 @@ const CameraScreen = (props) => {
     });
   };
 
-  
   const handleNavigation = () => {
-    if(isCompleted){
+    if (isCompleted) {
       //dispatch the action before navigating
       dispatch(
         surveyActions.addInformation({
-          images: imageRoll
+          images: imageRoll,
         })
       );
-      props.navigation.navigate('Location')
-    } 
+      props.navigation.navigate('Location');
+    }
   };
 
   return (
@@ -156,7 +175,11 @@ const CameraScreen = (props) => {
         </View>
       </View>
       <View style={styles.bottomCard}>
-        <NextButton onPress={handleNavigation} isDisabled={!isCompleted} />
+        <NextButton
+          onPress={handleNavigation}
+          isDisabled={!isCompleted}
+          nextArrow={true}
+        />
       </View>
 
       {/*Modal JSX, for image roll*/}
@@ -208,6 +231,14 @@ const CameraScreen = (props) => {
           </View>
         </SafeAreaView>
       </Modal>
+      {/* Information Popup broken */}
+      {/* <Popup
+        modalText={
+          'You can click on the titles of each section, such as "Cultivar" for additional information!'
+        }
+        modalVisible={modalVisible}
+        onPress={() => setModalVisible(!modalVisible)}
+      /> */}
     </View>
   );
 };
@@ -228,14 +259,6 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
-    headerRight: () => (
-      <Pressable onPress={() => {}}>
-        <Image
-          source={require('../../assets/info.png')}
-          style={styles.informationLogo}
-        />
-      </Pressable>
-    ),
   };
 };
 

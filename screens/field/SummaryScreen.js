@@ -14,11 +14,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
 
+import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Screen';
+
 /*
-  will need to query (useSelector) through the final redux state of the survey object?
   how to save the final images?
   then push the changes as a row entry to the database
 */
@@ -26,12 +27,31 @@ import { DEVICE_WIDTH } from '../../constants/Screen';
 const SummaryScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
+  //information header button
+  const [informationModalVisible, setInformationModalVisible] = useState(false);
+
   //simple test state
   const testState = useSelector((state) => state.survey);
 
   const handleSubmission = () => {
     setModalVisible(true);
   };
+
+  //allowing header component to interact with screen components
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={() => setInformationModalVisible(!informationModalVisible)}
+        >
+          <Image
+            source={require('../../assets/info.png')}
+            style={styles.informationLogo}
+          />
+        </Pressable>
+      ),
+    });
+  }, [props.navigation]);
 
   return (
     <View style={styles.screen}>
@@ -127,26 +147,15 @@ const SummaryScreen = (props) => {
             </View>
           </View>
         </View>
-        {/* <SafeAreaView style={styles.modalScreen}>
-          <Image
-            source={require('../../assets/info.png')}
-            style={styles.informationLogo}
-          />
-          <Text>Your subimission was succesfully recorded!</Text>
-          <View style={styles.homeScanContainer}>
-            <NextButton
-              buttonName={'Home'}
-              isDisabled={false}
-              onPress={() => setModalVisible(false)}
-            />
-            <NextButton
-              buttonName={'Scan Again'}
-              isDisabled={false}
-              onPress={() => setModalVisible(false)}
-            />
-          </View> */}
-        {/* </SafeAreaView> */}
       </Modal>
+      {/* Information Popup broken*/}
+      {/* <Popup
+        modalText={
+          'You can click on the titles of each section, such as "Cultivar" for additional information!'
+        }
+        modalVisible={modalVisible}
+        onPress={() => setModalVisible(!modalVisible)}
+      /> */}
     </View>
   );
 };
@@ -160,14 +169,6 @@ export const screenOptions = (navData) => {
       color: Colors.white,
     },
     headerTransparent: true,
-    headerRight: () => (
-      <Pressable onPress={() => {}}>
-        <Image
-          source={require('../../assets/info.png')}
-          style={styles.informationLogo}
-        />
-      </Pressable>
-    ),
   };
 };
 

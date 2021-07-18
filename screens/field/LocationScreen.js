@@ -7,10 +7,12 @@ import {
   Pressable,
   Image,
   TextInput,
+  Modal,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,6 +21,7 @@ import * as Location from 'expo-location';
 
 import Dots from 'react-native-dots-pagination';
 
+import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../../constants/Screen';
@@ -32,8 +35,14 @@ const LocationScreen = (props) => {
   //from expo docs, location.coords.latitude and location.coords.longitude
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  //
-  const [text, setText] = useState('');
+  //for the text input
+  const [text, setText] = useState(null);
+
+  //for the location loading
+  const [loading, setLoading] = useState(false);
+
+  //information header button
+  const [modalVisible, setModalVisible] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -51,7 +60,20 @@ const LocationScreen = (props) => {
     //need more form validation on GPS blank spaces
     if (text.trim()) {
       setCompleted(true);
+    }
+  };
+
+  const handleLocation = async () => {
+    //if statement to avoid double presses
+    if (errorMsg === null && useLocation != true) {
+      setLoading(true);
+      let location = await Location.getCurrentPositionAsync({});
+      setLoading(false);
+      setLocation(location);
+      setUseLocation(true);
+      setCompleted(true);
     } else {
+      console.log('already have location!');
     }
   };
 
@@ -67,65 +89,62 @@ const LocationScreen = (props) => {
     }
   };
 
-  const handleLocation = async () => {
-    if (errorMsg === null && useLocation != true) {
-      let location = await Location.getCurrentPositionAsync({});
-      //take these out later
-      console.log(`long: ${location.coords.longitude}`);
-      console.log(`lat: ${location.coords.latitude}`);
-      setLocation(location);
-      setUseLocation(true);
-      setCompleted(true);
-    } else {
-      console.log('already have location!');
-    }
-  };
+  //allowing header component to interact with screen components
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+          <Image
+            source={require('../../assets/info.png')}
+            style={styles.informationLogo}
+          />
+        </Pressable>
+      ),
+    });
+  }, [props.navigation]);
 
   return (
     <View style={styles.screen}>
       <View style={styles.tempCard}>
         <Text style={styles.title}>Location</Text>
         <View style={styles.greenCard}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          >
-            <View style={styles.dashedBoarder}>
-              <Image
-                source={require('../../assets/Bitmap.png')}
-                style={{ width: '100%', height: '100%' }}
-              ></Image>
-            </View>
-            <View style={styles.locationButtonContainer}>
-              <NextButton
-                buttonName={'Use Current Location'}
-                enabledStyle={styles.locationEnabled}
-                disabledStyle={styles.locationDisabled}
-                textDisabled={{ color: Colors.lightPurple }}
-                onPress={handleLocation}
-                isDisabled={!useLocation}
+          <View style={styles.dashedBoarder}>
+            <Image
+              source={require('../../assets/Bitmap.png')}
+              style={{ width: '100%', height: '100%' }}
+            ></Image>
+          </View>
+          <View style={styles.locationButtonContainer}>
+            <NextButton
+              buttonName={'Use Current Location'}
+              enabledStyle={styles.locationEnabled}
+              disabledStyle={styles.locationDisabled}
+              textDisabled={{ color: Colors.lightPurple }}
+              onPress={handleLocation}
+              isDisabled={!useLocation}
+            />
+          </View>
+          <Text style={styles.ORtext}>---- OR ----</Text>
+          <View style={styles.typeLocationContainer}>
+            {/* <Image source={require('../../assets/Bitmap.png')} /> */}
+            <View style={styles.textBox}>
+              <TextInput
+                placeholder='GPS'
+                placeholderTextColor={Colors.textGrey}
+                style={{ color: Colors.primaryGreen }}
+                blurOnSubmit
+                multiline
+                keyboardType='default'
+                autoCapitalize='none'
+                autoCorrect={true}
+                onEndEditing={textInputHandler}
+                onChangeText={(text) => setText(text)}
+                defaultValue={text}
               />
             </View>
-            <Text style={styles.ORtext}>---- OR ----</Text>
-            <View style={styles.typeLocationContainer}>
-              <Image source={require('../../assets/Bitmap.png')} />
-              <View style={styles.textBox}>
-                <TextInput
-                  placeholder='GPS'
-                  placeholderTextColor={Colors.textGrey}
-                  style={{ color: Colors.primaryGreen }}
-                  blurOnSubmit
-                  multiline
-                  keyboardType='default'
-                  autoCapitalize='none'
-                  autoCorrect={true}
-                  onEndEditing={textInputHandler}
-                  onChangeText={(text) => setText(text)}
-                  defaultValue={text}
-                />
-              </View>
-            </View>
-          </KeyboardAvoidingView>
+          </View>
         </View>
+
         <View style={styles.bottomCard}>
           <NextButton
             onPress={handleNavigation}
@@ -134,6 +153,23 @@ const LocationScreen = (props) => {
           />
         </View>
       </View>
+
+      {/* Loading Modal */}
+      {loading && (
+        <Modal transparent={true} style={styles.loadingScreen}>
+          <View style={styles.loadingBackground}>
+            <ActivityIndicator size='large' color={Colors.white} />
+          </View>
+        </Modal>
+      )}
+      {/* Information Popup, Broken */}
+      {/* <Popup
+        modalText={
+          'You can click on the titles of each section, such as "Cultivar" for additional information!'
+        }
+        modalVisible={modalVisible}
+        onPress={() => setModalVisible(!modalVisible)}
+      /> */}
     </View>
   );
 };
@@ -154,14 +190,6 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
-    headerRight: () => (
-      <Pressable onPress={() => {}}>
-        <Image
-          source={require('../../assets/info.png')}
-          style={styles.informationLogo}
-        />
-      </Pressable>
-    ),
   };
 };
 
@@ -235,7 +263,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '100%',
     height: '20%',
-    backgroundColor: 'green',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -254,6 +281,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     paddingTop: 10,
+  },
+  loadingScreen: {
+    flex: 1,
+  },
+  loadingBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    opacity: 0.7,
   },
 });
 

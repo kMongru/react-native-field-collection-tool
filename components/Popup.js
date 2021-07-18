@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, Pressable, View, Image } from 'react-native';
 
+import Colors from '../constants/Colors';
 /*
   props.modalText - the text rendered in the modal
   props.modalVisible - sets the inital modal visability
@@ -30,7 +31,7 @@ const Popup = (props) => {
               style={[styles.button, styles.buttonClose]}
               onPress={props.onPress}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Dismiss</Text>
             </Pressable>
           </View>
         </View>
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: Colors.primaryGreen,
   },
   textStyle: {
     color: 'white',

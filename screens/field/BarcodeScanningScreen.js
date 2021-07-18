@@ -79,6 +79,7 @@ const BarcodeScanningScreen = (props) => {
         style={styles.buttonContainer}
         onPress={handleNavigation}
         isDisabled={!scanned}
+        nextArrow={true}
       />
     </View>
   );
