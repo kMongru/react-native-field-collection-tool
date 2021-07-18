@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Pressable, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Pressable,
+  Image,
+  TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+} from 'react-native';
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
@@ -13,13 +25,15 @@ import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../../constants/Screen';
 
 const LocationScreen = (props) => {
   //set to false, prototyping is true for now
-  const [isCompleted, setCompleted] = useState(true);
+  const [isCompleted, setCompleted] = useState(false);
   //for the UI of the component
   const [useLocation, setUseLocation] = useState(false);
 
   //from expo docs, location.coords.latitude and location.coords.longitude
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  //
+  const [text, setText] = useState('');
 
   const dispatch = useDispatch();
 
@@ -32,6 +46,14 @@ const LocationScreen = (props) => {
       }
     })();
   }, []);
+
+  const textInputHandler = () => {
+    //need more form validation on GPS blank spaces
+    if (text.trim()) {
+      setCompleted(true);
+    } else {
+    }
+  };
 
   const handleNavigation = () => {
     if (isCompleted) {
@@ -64,31 +86,52 @@ const LocationScreen = (props) => {
       <View style={styles.tempCard}>
         <Text style={styles.title}>Location</Text>
         <View style={styles.greenCard}>
-          <View style={styles.dashedBoarder}>
-            <Image
-              source={require('../../assets/Bitmap.png')}
-              style={{ width: '100%', height: '100%' }}
-            ></Image>
-          </View>
-          <View style={styles.locationButtonContainer}>
-            <NextButton
-              buttonName={'Use Current Location'}
-              onPress={handleLocation}
-              isDisabled={!useLocation}
-            />
-          </View>
-          <Text style={styles.ORtext}>---- OR ----</Text>
-          <View style={styles.typeLocationContainer}>
-            <NextButton
-              buttonName={'Enter GPS Coordinates'}
-              onPress={() => {}}
-              isDisabled={useLocation}
-            />
-          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <View style={styles.dashedBoarder}>
+              <Image
+                source={require('../../assets/Bitmap.png')}
+                style={{ width: '100%', height: '100%' }}
+              ></Image>
+            </View>
+            <View style={styles.locationButtonContainer}>
+              <NextButton
+                buttonName={'Use Current Location'}
+                enabledStyle={styles.locationEnabled}
+                disabledStyle={styles.locationDisabled}
+                textDisabled={{ color: Colors.lightPurple }}
+                onPress={handleLocation}
+                isDisabled={!useLocation}
+              />
+            </View>
+            <Text style={styles.ORtext}>---- OR ----</Text>
+            <View style={styles.typeLocationContainer}>
+              <Image source={require('../../assets/Bitmap.png')} />
+              <View style={styles.textBox}>
+                <TextInput
+                  placeholder='GPS'
+                  placeholderTextColor={Colors.textGrey}
+                  style={{ color: Colors.primaryGreen }}
+                  blurOnSubmit
+                  multiline
+                  keyboardType='default'
+                  autoCapitalize='none'
+                  autoCorrect={true}
+                  onEndEditing={textInputHandler}
+                  onChangeText={(text) => setText(text)}
+                  defaultValue={text}
+                />
+              </View>
+            </View>
+          </KeyboardAvoidingView>
         </View>
-
         <View style={styles.bottomCard}>
-          <NextButton onPress={handleNavigation} isDisabled={!isCompleted} />
+          <NextButton
+            onPress={handleNavigation}
+            isDisabled={!isCompleted}
+            nextArrow={true}
+          />
         </View>
       </View>
     </View>
@@ -174,7 +217,12 @@ const styles = StyleSheet.create({
   },
   locationButtonContainer: {
     width: '100%',
-    backgroundColor: 'red',
+  },
+  locationEnabled: {
+    backgroundColor: Colors.lightPurple,
+  },
+  locationDisabled: {
+    borderColor: Colors.lightPurple,
   },
   ORtext: {
     width: '100%',
@@ -184,8 +232,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   typeLocationContainer: {
+    marginTop: 20,
     width: '100%',
+    height: '20%',
     backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textBox: {
+    backgroundColor: Colors.background,
+    width: '80%',
+    height: '45%',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   bottomCard: {
     backgroundColor: Colors.background,

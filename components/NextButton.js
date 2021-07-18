@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
 
 import Colors from '../constants/Colors';
 
@@ -10,12 +10,13 @@ import Colors from '../constants/Colors';
   onPress - the method attached to the touchable opacity
   disabledStyle - additional disabled style
   enabledStyle - additional enabled style
+  textDisabled - disabled text
 
   need to make this more flexible and become a general button*
 
 */
 
-const NextButton = ({ buttonName = 'Next', ...props }) => {
+const NextButton = ({ buttonName = 'Next', nextArrow = false, ...props }) => {
   const [buttonDisabled, setButtonDisabled] = useState(true);
 
   useEffect(() => {
@@ -32,9 +33,23 @@ const NextButton = ({ buttonName = 'Next', ...props }) => {
         }
         onPress={props.onPress}
       >
-        <Text style={buttonDisabled ? styles.textDisabled : styles.textEnabled}>
-          {buttonName}
-        </Text>
+        <View style={styles.rowContainer}>
+          <Text
+            style={
+              buttonDisabled
+                ? { ...styles.textDisabled, ...props.textDisabled }
+                : styles.textEnabled
+            }
+          >
+            {buttonName}
+          </Text>
+          {nextArrow && (
+            <Image
+              source={require('../assets/white-right-arrow.png')}
+              style={{ width: 30, height: 30, marginLeft: 10 }}
+            />
+          )}
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -49,7 +64,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     borderRadius: 10,
     backgroundColor: Colors.yellow,
-    color: Colors.white,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   buttonDisabled: {
     alignItems: 'center',
@@ -61,17 +83,29 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: Colors.yellow,
     backgroundColor: Colors.backgroundColor,
-    color: Colors.yellow,
+    shadowColor: Colors.yellow,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   textDisabled: {
     fontWeight: '400',
     fontSize: 20,
-    color: Colors.yellow,
+    color: Colors.white,
   },
   textEnabled: {
     fontWeight: '400',
     fontSize: 20,
     color: Colors.white,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
   },
 });
 
