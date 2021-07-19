@@ -2,11 +2,9 @@
 
 Research Survey Tool for Western University Researchers
 
-test upload from VSC
-
 notes:
--text inputs need to adjust and implement proper keyboard avoiding view
 
+- text inputs need to adjust and implement proper keyboard avoiding view
 - need to fix header popup, pushing objects
 - reorder the useEffect calls https://reactjs.org/docs/hooks-rules.html
 - scanning popup

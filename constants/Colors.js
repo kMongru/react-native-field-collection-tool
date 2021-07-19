@@ -3,6 +3,7 @@ export default {
   white: '#FFFFFF',
 
   backgroundGrey: '#30444E',
+  popupGrey: '#E7EEF1',
   textGrey: '#A9A9A9',
 
   primaryGreen: '#3ED598',

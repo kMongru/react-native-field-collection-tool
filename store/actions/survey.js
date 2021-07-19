@@ -5,6 +5,6 @@ export const addInformation = (information) => {
   return { type: ADD_INFORMATION, information: information };
 };
 
-export const resetContents = (surveyId) => {
-  return { type: RESET_CONTENTS, sid: surveyId };
+export const resetContents = () => {
+  return { type: RESET_CONTENTS };
 };

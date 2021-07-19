@@ -38,7 +38,7 @@ const BarcodeScanningScreen = (props) => {
     setScanned(true);
     //remeber it won't be avaible till the next rerender cycle
     setScannedData(data);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {

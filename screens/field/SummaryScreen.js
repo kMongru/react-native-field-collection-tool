@@ -30,11 +30,23 @@ const SummaryScreen = (props) => {
   //information header button
   const [informationModalVisible, setInformationModalVisible] = useState(false);
 
+  const dispatch = useDispatch();
+
   //simple test state
   const testState = useSelector((state) => state.survey);
 
   const handleSubmission = () => {
     setModalVisible(true);
+  };
+
+  const handleHomeNavigation = () => {
+    dispatch(surveyActions.resetContents());
+    props.navigation.navigate('Home');
+  };
+
+  const handleScanNavigation = () => {
+    dispatch(surveyActions.resetContents());
+    props.navigation.navigate('BarcodeScanning');
   };
 
   //allowing header component to interact with screen components
@@ -132,17 +144,37 @@ const SummaryScreen = (props) => {
               source={require('../../assets/check.png')}
               style={styles.comfirmationIMG}
             />
-            <Text>Your subimission was succesfully recorded!</Text>
+            <View
+              style={{
+                width: 300,
+
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ color: Colors.textGrey }}>
+                Your subimission was succesfully recorded!
+              </Text>
+            </View>
             <View style={styles.homeScanContainer}>
               <NextButton
                 buttonName={'Home'}
                 isDisabled={false}
-                onPress={() => setModalVisible(false)}
+                onPress={handleHomeNavigation}
+                enabledStyle={{
+                  marginHorizontal: 20,
+                  width: '80%',
+                  backgroundColor: Colors.darkPurple,
+                }}
               />
               <NextButton
                 buttonName={'Scan Again'}
                 isDisabled={false}
-                onPress={() => setModalVisible(false)}
+                onPress={handleScanNavigation}
+                enabledStyle={{
+                  marginHorizontal: 20,
+                  width: '80%',
+                  backgroundColor: Colors.primaryGreen,
+                }}
               />
             </View>
           </View>
@@ -245,13 +277,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: Colors.popupGrey,
+    marginHorizontal: '20%',
     borderRadius: 20,
-    padding: 35,
+    padding: 10,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {

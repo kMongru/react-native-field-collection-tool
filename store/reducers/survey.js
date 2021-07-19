@@ -27,7 +27,9 @@ const surveyReducer = (state = initialState, action) => {
         ...contents,
       };
     case RESET_CONTENTS:
-      return {};
+      return {
+        ...initialState,
+      };
 
     default:
       return state;
