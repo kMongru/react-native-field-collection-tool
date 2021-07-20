@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SurveyNavigator } from './FieldNavigator';
+import { AuthNavigator } from './AuthNavigator';
 // import { ShopNavigator, AuthNavigator } from './FieldNavigator';
 // import StartupScreen from '../screens/StartupScreen';
 
@@ -16,7 +17,8 @@ const AppNavigator = (props) => {
 
   return (
     <NavigationContainer>
-      <SurveyNavigator />
+      <AuthNavigator />
+      {/* <SurveyNavigator /> */}
     </NavigationContainer>
   );
 };

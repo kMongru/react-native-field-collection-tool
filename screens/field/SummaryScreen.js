@@ -41,11 +41,15 @@ const SummaryScreen = (props) => {
 
   const handleHomeNavigation = () => {
     dispatch(surveyActions.resetContents());
+    //close modal
+    setModalVisible(false);
     props.navigation.navigate('Home');
   };
 
   const handleScanNavigation = () => {
     dispatch(surveyActions.resetContents());
+    //close modal
+    setModalVisible(false);
     props.navigation.navigate('BarcodeScanning');
   };
 

@@ -84,13 +84,3 @@ export const SurveyNavigator = () => {
     </SurveyStackNavigator.Navigator>
   );
 };
-
-const HomeStackNavigator = createStackNavigator();
-
-export const HomeNavigator = () => {
-  return (
-    <HomeStackNavigator.Navigator
-      screenOptions={defaultNavOptions}
-    ></HomeStackNavigator.Navigator>
-  );
-};
