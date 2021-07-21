@@ -1,6 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 
+import Colors from '../constants/Colors';
+
 const INPUT_CHANGE = 'INPUT_CHANGE';
 const INPUT_BLUR = 'INPUT_BLUR';
 
@@ -84,15 +86,17 @@ const AuthInput = (props) => {
 
 const styles = StyleSheet.create({
   formControl: {
-    width: '100%',
+    width: '90%',
   },
   label: {
     marginVertical: 8,
+    color: Colors.white,
+    fontWeight: '600',
   },
   input: {
     paddingHorizontal: 2,
     paddingVertical: 5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: Colors.primaryGreen,
     borderBottomWidth: 1,
   },
   errorContainer: {

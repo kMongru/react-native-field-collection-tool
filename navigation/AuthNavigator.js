@@ -19,21 +19,21 @@ const AuthStackNavigator = createStackNavigator();
 export const AuthNavigator = () => {
   return (
     <AuthStackNavigator.Navigator>
-      <AuthStackNavigator.Screen
+      {/* <AuthStackNavigator.Screen
         name='Landing'
         component={UsersLandingScreen}
         options={LandingScreenOptions}
-      />
+      /> */}
       <AuthStackNavigator.Screen
         name='Login'
         component={LoginScreen}
         options={LoginScreenOptions}
       />
-      <AuthStackNavigator.Screen
+      {/* <AuthStackNavigator.Screen
         name='CreateAccount'
         component={CreateAccountScreen}
         options={CreateAccountScreenOptions}
-      />
+      /> */}
     </AuthStackNavigator.Navigator>
   );
 };
