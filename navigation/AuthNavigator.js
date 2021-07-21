@@ -24,16 +24,16 @@ export const AuthNavigator = () => {
         component={UsersLandingScreen}
         options={LandingScreenOptions}
       /> */}
-      <AuthStackNavigator.Screen
+      {/* <AuthStackNavigator.Screen
         name='Login'
         component={LoginScreen}
         options={LoginScreenOptions}
-      />
-      {/* <AuthStackNavigator.Screen
+      /> */}
+      <AuthStackNavigator.Screen
         name='CreateAccount'
         component={CreateAccountScreen}
         options={CreateAccountScreenOptions}
-      /> */}
+      />
     </AuthStackNavigator.Navigator>
   );
 };
