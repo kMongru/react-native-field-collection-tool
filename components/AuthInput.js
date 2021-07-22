@@ -87,6 +87,7 @@ const AuthInput = (props) => {
 const styles = StyleSheet.create({
   formControl: {
     width: '90%',
+    marginVertical: '5%',
   },
   label: {
     marginVertical: 8,

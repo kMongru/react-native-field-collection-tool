@@ -61,6 +61,7 @@ export const signup = (email, password, orginization) => {
   //   );
   //   saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   // };
+  return { type: AUTHENTICATE, userId: email, token: 'dummyToken' };
   console.log('signup called');
 };
 
@@ -108,7 +109,7 @@ export const login = (email, password) => {
   //   saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   // };
   console.log('login called');
-  return { type: AUTHENTICATE, userId: 'dummyID', token: 'dummyToken' };
+  return { type: AUTHENTICATE, userId: email, token: 'dummyToken' };
 };
 
 // export const logout = () => {

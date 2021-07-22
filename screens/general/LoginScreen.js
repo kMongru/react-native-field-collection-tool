@@ -1,17 +1,28 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useReducer } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { useDispatch } from 'react-redux';
-import * as authActions from '../../store/actions/auth';
 import { Ionicons } from '@expo/vector-icons';
 
+//custom imports
+import * as authActions from '../../store/actions/auth';
 import AuthInput from '../../components/AuthInput';
 import Colors from '../../constants/Colors';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 //could implement this same structure for the input page??
+//redux for state mangement of the log in form
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
+    //uses action.input param as key for object
     const updatedValues = {
       ...state.inputValues,
       [action.input]: action.value,
@@ -37,13 +48,15 @@ const formReducer = (state, action) => {
 };
 
 const LoginScreen = (props) => {
+  //declaring and initizating useStates
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const [isSignup, setIsSignup] = useState(false);
   const [passwordHidden, setPasswordHidden] = useState(true);
   const [eye, setEye] = useState('eye-off-outline');
+
   const dispatch = useDispatch();
 
+  //inital state of redux store
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
@@ -56,6 +69,7 @@ const LoginScreen = (props) => {
     formIsValid: false,
   });
 
+  //change the image of the eye icon to change password visibility
   const changeIcon = () => {
     setEye((prev) =>
       prev === 'eye-off-outline' ? 'eye-outline' : 'eye-off-outline'
@@ -73,14 +87,15 @@ const LoginScreen = (props) => {
     setError(null);
     setIsLoading(true);
     try {
+      //navigation is a result of auth store state change after this action has been dispatched
       await dispatch(action);
-      // props.navigation.navigate('Shop');
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
     }
   };
 
+  //handling input changes, and updating the form state
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
@@ -93,66 +108,95 @@ const LoginScreen = (props) => {
     [dispatchFormState]
   );
 
+  //simple navigation implementation
+  const handlePasswordNav = () => {
+    //still need to build screens and recovery system
+  };
   const handleCreateAccountNav = () => {
     props.navigation.navigate('CreateAccount');
   };
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.textContainer}>
-        <Text style={styles.headerTitle}>Log In</Text>
-        <Text style={styles.instructionText}>Please log in to continue</Text>
-      </View>
-      <View style={styles.centeredItems}>
-        <View style={styles.formContainer}>
-          <AuthInput
-            id='email'
-            label='E-Mail'
-            keyboardType='email-address'
-            required
-            email
-            autoCapitalize='none'
-            errorText='Please enter a valid email address.'
-            onInputChange={inputChangeHandler}
-            initialValue=''
-          />
-          <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.screen}>
+        {/* Title Text */}
+        <View style={styles.textContainer}>
+          <Text style={styles.headerTitle}>Log In</Text>
+          <Text style={styles.instructionText}>Please log in to continue</Text>
+        </View>
+        <View style={styles.centeredItems}>
+          {/* Input Forms */}
+          <View style={styles.formContainer}>
             <AuthInput
-              id='password'
-              label='Password'
-              keyboardType='default'
-              secureTextEntry={passwordHidden}
+              id='email'
+              label='E-Mail'
+              keyboardType='email-address'
               required
-              minLength={5}
+              email
               autoCapitalize='none'
-              errorText='Please enter a valid password.'
+              errorText='Please enter a valid email address.'
               onInputChange={inputChangeHandler}
               initialValue=''
             />
-            <TouchableOpacity onPress={changeIcon}>
-              <Ionicons name={eye} size={30} color={Colors.textGrey} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <AuthInput
+                id='password'
+                label='Password'
+                keyboardType='default'
+                secureTextEntry={passwordHidden}
+                required
+                minLength={5}
+                autoCapitalize='none'
+                errorText='Please enter a valid password.'
+                onInputChange={inputChangeHandler}
+                initialValue=''
+              />
+              <TouchableOpacity onPress={changeIcon}>
+                <Ionicons name={eye} size={30} color={Colors.textGrey} />
+              </TouchableOpacity>
+            </View>
           </View>
+          {/* Login Button */}
+          <TouchableOpacity
+            style={
+              formState.formIsValid
+                ? { ...styles.loginContainer, ...styles.loginEnabled }
+                : { ...styles.loginContainer, ...styles.loginDisabled }
+            }
+            disabled={!formState.formIsValid}
+            onPress={handleLogin}
+          >
+            <View>
+              <Text
+                style={
+                  formState.formIsValid
+                    ? { ...styles.logInText, color: Colors.white }
+                    : { ...styles.logInText, color: Colors.darkPurple }
+                }
+              >
+                Log in
+              </Text>
+            </View>
+          </TouchableOpacity>
+          {/* Forgotten Password */}
+          <TouchableOpacity onPress={handlePasswordNav}>
+            <Text style={{ color: Colors.textGrey }}>
+              Forget your password?
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.loginContainer} onPress={handleLogin}>
-          <View>
-            <Text style={styles.logInText}>Log in</Text>
-          </View>
+        {/* Create Account Text */}
+        <TouchableOpacity
+          style={styles.createAccountContainer}
+          onPress={handleCreateAccountNav}
+        >
+          <Text style={styles.bottomText}>
+            Don't have an account?
+            <Text style={styles.bottomTextGreen}> Sign up</Text>
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={{ color: Colors.textGrey }}>Forget your password?</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity
-        style={styles.createAccountContainer}
-        onPress={handleCreateAccountNav}
-      >
-        <Text style={styles.bottomText}>
-          Don't have an account?
-          <Text style={styles.bottomTextGreen}> Sign up</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -167,7 +211,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   textContainer: {
-    marginTop: '20%',
+    marginTop: '15%',
     marginHorizontal: '5%',
   },
   headerTitle: {
@@ -184,12 +228,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   formContainer: {
+    height: '50%',
     width: '80%',
     backgroundColor: Colors.backgroundGrey,
     marginTop: '10%',
     marginHorizontal: '5%',
     borderRadius: 25,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: '5%',
     borderWidth: 5,
     borderColor: Colors.backgroundGrey,
     shadowColor: '#000',
@@ -206,14 +252,21 @@ const styles = StyleSheet.create({
     height: '10%',
     borderRadius: 15,
     marginTop: 20,
+    marginBottom: 10,
     marginHorizontal: '20%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loginEnabled: {
     backgroundColor: Colors.darkPurple,
+  },
+  loginDisabled: {
+    backgroundColor: Colors.popupGrey,
+    borderWidth: 1,
+    borderColor: Colors.darkPurple,
   },
   logInText: {
     fontWeight: '600',
-    color: Colors.white,
   },
   createAccountContainer: {
     marginVertical: '5%',
