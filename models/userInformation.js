@@ -1,9 +1,9 @@
 //api call for text-to-speech
 
 class UserInformation {
-  constructor(username, email, occupation) {
+  constructor(username, email, orginization) {
     this.username = username;
     this.email = email;
-    this.occupation = occupation;
+    this.orginization = orginization;
   }
 }

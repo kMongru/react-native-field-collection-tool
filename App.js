@@ -7,9 +7,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import AppNavigator from './navigation/AppNavigator';
 import surveyReducer from './store/reducers/survey';
+import authReducer from './store/reducers/auth';
 
 const rootReducer = combineReducers({
   survey: surveyReducer,
+  auth: authReducer,
 });
 
 //remove the composeWithDevTools on deployment

@@ -8,18 +8,18 @@ export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
 
-export const setDidTryAL = () => {
-  return { type: SET_DID_TRY_AL };
-};
+// export const setDidTryAL = () => {
+//   return { type: SET_DID_TRY_AL };
+// };
 
-export const authenticate = (userId, token, expiryTime) => {
-  return (dispatch) => {
-    dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token });
-  };
-};
+// export const authenticate = (userId, token, expiryTime) => {
+//   return (dispatch) => {
+//     dispatch(setLogoutTimer(expiryTime));
+//     dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+//   };
+// };
 
-export const signup = (email, password) => {
+export const signup = (email, password, orginization) => {
   // return async dispatch => {
   //   connect to database for signup call
   //   const response = await fetch(
@@ -108,35 +108,36 @@ export const login = (email, password) => {
   //   saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   // };
   console.log('login called');
+  return { type: AUTHENTICATE, userId: 'dummyID', token: 'dummyToken' };
 };
 
-export const logout = () => {
-  clearLogoutTimer();
-  AsyncStorage.removeItem('userData');
-  return { type: LOGOUT };
-};
+// export const logout = () => {
+//   clearLogoutTimer();
+//   AsyncStorage.removeItem('userData');
+//   return { type: LOGOUT };
+// };
 
-const clearLogoutTimer = () => {
-  if (timer) {
-    clearTimeout(timer);
-  }
-};
+// const clearLogoutTimer = () => {
+//   if (timer) {
+//     clearTimeout(timer);
+//   }
+// };
 
-const setLogoutTimer = (expirationTime) => {
-  return (dispatch) => {
-    timer = setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
-  };
-};
+// const setLogoutTimer = (expirationTime) => {
+//   return (dispatch) => {
+//     timer = setTimeout(() => {
+//       dispatch(logout());
+//     }, expirationTime);
+//   };
+// };
 
-const saveDataToStorage = (token, userId, expirationDate) => {
-  AsyncStorage.setItem(
-    'userData',
-    JSON.stringify({
-      token: token,
-      userId: userId,
-      expiryDate: expirationDate.toISOString(),
-    })
-  );
-};
+// const saveDataToStorage = (token, userId, expirationDate) => {
+//   AsyncStorage.setItem(
+//     'userData',
+//     JSON.stringify({
+//       token: token,
+//       userId: userId,
+//       expiryDate: expirationDate.toISOString(),
+//     })
+//   );
+// };

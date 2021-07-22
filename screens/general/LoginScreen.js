@@ -16,11 +16,14 @@ const formReducer = (state, action) => {
       ...state.inputValues,
       [action.input]: action.value,
     };
+    //update validity by combinning with old state and overwritting
     const updatedValidities = {
       ...state.inputValidities,
       [action.input]: action.isValid,
     };
+
     let updatedFormIsValid = true;
+    //loop to check if each key returns a valid true state, only remains true if ALL are true
     for (const key in updatedValidities) {
       updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
@@ -63,7 +66,7 @@ const LoginScreen = (props) => {
   //needs to be async for rest calls to server!
   const handleLogin = async () => {
     //dispatch a login action to the store to switch to new stack
-    let action = authActions.signup(
+    let action = authActions.login(
       formState.inputValues.email,
       formState.inputValues.password
     );
