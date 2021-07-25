@@ -5,12 +5,14 @@ import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Screen';
 
 const UsersLandingScreen = (props) => {
+  //navigation method
   const handleFieldLogin = () => {
     props.navigation.navigate('Login');
   };
 
   return (
     <View style={styles.screen}>
+      {/* Title */}
       <View style={styles.titleContainer}>
         <Text style={styles.headerText}>Welcome!</Text>
       </View>

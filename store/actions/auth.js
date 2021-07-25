@@ -61,8 +61,8 @@ export const signup = (email, password, orginization) => {
   //   );
   //   saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   // };
-  return { type: AUTHENTICATE, userId: email, token: 'dummyToken' };
   console.log('signup called');
+  return { type: AUTHENTICATE, userId: email, token: 'dummyToken' };
 };
 
 export const login = (email, password) => {
