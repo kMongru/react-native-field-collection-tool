@@ -2,17 +2,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Button, Text, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
+
+import { DEVICE_WIDTH } from '../../constants/Screen';
 import Colors from '../../constants/Colors';
 
 //declaring recording Audio object
 let recording = new Audio.Recording();
 
 const AudioInput = () => {
-  const [RecordedURI, SetRecordedURI] = useState(null);
-  const [AudioPerm, SetAudioPerm] = useState(false);
-  const [isRecording, SetisRecording] = useState(false);
-  const [isPLaying, SetisPLaying] = useState(false);
-  //
+  const [recordedURI, setRecordedURI] = useState(null);
+  const [AudioPerm, setAudioPerm] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  //timer states
   const [secondsTimer, setSecondsTimer] = useState(0);
   const [minutesTimer, setMinuteTimer] = useState(0);
 
@@ -29,7 +32,7 @@ const AudioInput = () => {
       allowsRecordingIOS: true,
       playsInSilentModeIOS: true,
     });
-    SetAudioPerm(getAudioPerm.granted);
+    setAudioPerm(getAudioPerm.granted);
   };
 
   //not rolling over properly
@@ -50,7 +53,7 @@ const AudioInput = () => {
         );
         await recording.startAsync();
         setSecondsTimer(0);
-        SetisRecording(true);
+        setIsRecording(true);
       } catch (error) {
         console.log(error);
       }
@@ -66,9 +69,9 @@ const AudioInput = () => {
       const result = recording.getURI();
       console.log('stop recording' + status.durationMillis);
       setAudioLength(status.durationMillis / 1000); //here is the length in seconds
-      SetRecordedURI(result); // Here is the URI
+      setRecordedURI(result); // Here is the URI
       recording = new Audio.Recording();
-      SetisRecording(false);
+      setIsRecording(false);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +88,7 @@ const AudioInput = () => {
   const playSound = async () => {
     try {
       const result = await Player.current.loadAsync(
-        { uri: RecordedURI },
+        { uri: recordedURI },
         {},
         true
       );
@@ -95,7 +98,7 @@ const AudioInput = () => {
       if (response.isLoaded) {
         if (response.isPlaying === false) {
           Player.current.playAsync();
-          SetisPLaying(true);
+          setIsPlaying(true);
         }
       }
     } catch (error) {
@@ -109,48 +112,94 @@ const AudioInput = () => {
       console.log('stop sound' + checkLoading.durationMillis);
       if (checkLoading.isLoaded === true) {
         await Player.current.stopAsync();
-        SetisPLaying(false);
+        setIsPlaying(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const resetSound = () => {
+    setRecordedURI(null);
+  };
+
   return (
     <View style={styles.container}>
+      {/* Timer */}
       <Text style={styles.timerText}>{`${
         minutesTimer <= 9 ? `0${minutesTimer}` : minutesTimer
       }:${secondsTimer <= 9 ? `0${secondsTimer}` : secondsTimer}`}</Text>
-      {!RecordedURI ? (
-        isRecording ? (
-          <TouchableOpacity onPress={() => stopRecording()}>
-            <View
-              style={{
-                ...styles.iconContainer,
-                backgroundColor: Colors.darkRed,
-              }}
-            >
+      {!recordedURI ? (
+        <View style={styles.singleButtonContainer}>
+          {isRecording ? (
+            <TouchableOpacity onPress={() => stopRecording()}>
+              <View
+                style={{
+                  ...styles.iconContainer,
+                  backgroundColor: Colors.darkRed,
+                }}
+              >
+                <Ionicons
+                  name={'stop-circle-outline'}
+                  size={40}
+                  color={Colors.white}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => startRecording()}>
+              <View style={styles.iconContainer}>
+                <Ionicons name={'mic'} size={40} color={Colors.white} />
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
+      ) : (
+        <View style={styles.rowContainer}>
+          {/* reset button */}
+          <TouchableOpacity onPress={() => resetSound()}>
+            <View style={styles.playingIconContainer}>
               <Ionicons
-                name={'stop-circle-outline'}
+                name={'refresh-outline'}
                 size={40}
-                color={Colors.white}
+                color={Colors.backgroundColor}
               />
             </View>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => startRecording()}>
-            <View style={styles.iconContainer}>
-              <Ionicons name={'mic'} size={40} color={Colors.white} />
-            </View>
-          </TouchableOpacity>
-        )
-      ) : (
-        <Button
-          title='Play Sound'
-          onPress={isPLaying ? () => stopSound : () => playSound()}
-        />
+          {/* Check Mark Container */}
+          <View style={styles.checkMarkContainer}>
+            <Ionicons
+              name={'checkmark-outline'}
+              size={40}
+              color={Colors.primaryGreen}
+            />
+          </View>
+          {isPlaying ? (
+            //Stop Playing Button
+            <TouchableOpacity onPress={() => stopSound()}>
+              <View style={styles.playingIconContainer}>
+                <Ionicons
+                  name={'pause-outline'}
+                  size={40}
+                  color={Colors.backgroundColor}
+                />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            //Playing Button
+            <TouchableOpacity onPress={() => playSound()}>
+              <View style={styles.playingIconContainer}>
+                <Ionicons
+                  name={'play-outline'}
+                  size={40}
+                  color={Colors.backgroundColor}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
       )}
-      <Text>{RecordedURI}</Text>
+      {/* <Text>{recordedURI}</Text> */}
     </View>
   );
 };
@@ -166,12 +215,47 @@ const styles = StyleSheet.create({
     color: Colors.textGrey,
     fontWeight: '100',
   },
+  singleButtonContainer: {
+    marginTop: DEVICE_WIDTH / 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    height: '30%',
+  },
   iconContainer: {
     backgroundColor: Colors.primaryGreen,
-    borderRadius: 10,
+    height: DEVICE_WIDTH / 5,
+    width: DEVICE_WIDTH / 5,
+    borderRadius: DEVICE_WIDTH / 2.5,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingLeft: '2%',
-    paddingRight: '1%',
     paddingVertical: '2%',
+    paddingRight: '1%',
+  },
+  rowContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '80%',
+    height: '30%',
+    backgroundColor: Colors.primaryGreen,
+    borderRadius: 15,
+    marginTop: DEVICE_WIDTH / 20,
+    paddingHorizontal: '4%',
+  },
+  checkMarkContainer: {
+    backgroundColor: 'black',
+    height: DEVICE_WIDTH / 5,
+    width: DEVICE_WIDTH / 5,
+    borderRadius: DEVICE_WIDTH / 2.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playingIconContainer: {
+    backgroundColor: '#CEECE0',
+    borderRadius: DEVICE_WIDTH / 12,
+    padding: '1%',
     justifyContent: 'center',
     alignItems: 'center',
   },
