@@ -18,8 +18,9 @@ const AppNavigator = (props) => {
 
   return (
     <NavigationContainer>
-      {isAuth && <SurveyNavigator />}
-      {!isAuth && <AuthNavigator />}
+      <SurveyNavigator />
+      {/* {isAuth && <SurveyNavigator />}
+      {!isAuth && <AuthNavigator />} */}
     </NavigationContainer>
   );
 };

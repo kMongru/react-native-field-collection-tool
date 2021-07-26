@@ -41,7 +41,7 @@ const SurveyStackNavigator = createStackNavigator();
 export const SurveyNavigator = () => {
   return (
     <SurveyStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <SurveyStackNavigator.Screen
+      {/* <SurveyStackNavigator.Screen
         name='Home'
         component={HomeScreen}
         options={homeScreenOptions}
@@ -60,13 +60,13 @@ export const SurveyNavigator = () => {
         name='BarcodeScanning'
         component={BarcodeScanningScreen}
         options={barcodeScanningScreenOptions}
-      />
+      /> */}
       <SurveyStackNavigator.Screen
         name='InputForms'
         component={InputFormsScreen}
         options={inputFormsScreenOptions}
       />
-      <SurveyStackNavigator.Screen
+      {/* <SurveyStackNavigator.Screen
         name='Camera'
         component={CameraScreen}
         options={cameraScreenOptions}
@@ -80,7 +80,7 @@ export const SurveyNavigator = () => {
         name='Summary'
         component={SummaryScreen}
         options={summaryScreenOptions}
-      />
+      /> */}
     </SurveyStackNavigator.Navigator>
   );
 };
