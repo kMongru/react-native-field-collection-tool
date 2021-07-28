@@ -156,6 +156,7 @@ const LoginScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
+
           {/* Login Button */}
           <TouchableOpacity
             style={

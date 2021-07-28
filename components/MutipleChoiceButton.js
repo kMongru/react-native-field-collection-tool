@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors';
+
 /*
   val - should be the text held inside the mutiple choice
+  handleCropSelection - callback implemented in parent component
 */
 
 const MultipleChoiceButton = (props) => {
   const [isSelected, setSelected] = useState(false);
 
-  const handlePress = () => {
-    setSelected((prevState) => !prevState);
-  };
+  //object destructing into consts
+  const { value, handleCropSelection } = props;
+
+  useEffect(() => {
+    try {
+      handleCropSelection(value, isSelected);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [isSelected]);
 
   return (
     <View style={{ ...props.style, ...styles }}>
       <TouchableOpacity
         style={isSelected ? styles.buttonEnabled : styles.buttonDisabled}
         onPress={() => {
-          props.onPress();
-          handlePress();
+          setSelected((prevState) => !prevState);
         }}
       >
-        <Text style={styles.text}>{props.val}</Text>
+        <Text style={styles.text}>{value}</Text>
       </TouchableOpacity>
     </View>
   );

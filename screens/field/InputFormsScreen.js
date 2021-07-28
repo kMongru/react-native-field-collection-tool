@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer, useCallback } from 'react';
 import {
   View,
   Text,
@@ -26,10 +26,56 @@ import Colors from '../../constants/Colors';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
+const MULTIPLE_CHOICE_SELECTION = 'MULTIPLE_CHOICE_SELECTION';
+
+const multipleChoiceReducer = (state, action) => {
+  switch (action.type) {
+    case MULTIPLE_CHOICE_SELECTION:
+      //declaring varibles
+      let currentSelection = state.selectedChoice;
+      let updatedValidities = {
+        ...state,
+        [action.input]: action.isValid,
+      };
+
+      //checking if the action is selecting or deselecting a choice
+      if (action.isValid === true) {
+        //selecting a new option
+        currentSelection = action.value;
+        //changing all other states to false
+        for (const key in updatedValidities) {
+          if (key !== action.input) {
+            updatedValidities = {
+              ...state,
+              [key]: false,
+            };
+          }
+        }
+      } else {
+        //deselecting an option
+        //currentSelection = null;
+      }
+
+      let updatedFormIsValid = false;
+
+      //valid if one valitity is true
+      for (const key in updatedValidities) {
+        updatedFormIsValid = updatedFormIsValid || updatedValidities[key];
+      }
+
+      return {
+        selectedChoice: currentSelection,
+        validities: updatedValidities,
+        formIsValid: updatedFormIsValid,
+      };
+
+    default:
+      return state;
+  }
+};
+
 const InputFormsScreen = (props) => {
   const [isCompleted, setCompleted] = useState(false);
-  //mutiple choice selection
-  const [selectedChoice, setSelectedChoice] = useState(null);
   //text/audio information, either string or uri
   const [cultivar, setCultivar] = useState(null);
   const [controlMethods, setControlMethods] = useState(null);
@@ -39,17 +85,28 @@ const InputFormsScreen = (props) => {
   //information header button
   const [modalVisible, setModalVisible] = useState(false);
 
+  //inital state of multiple choice redux store
+  const [multipleChoiceState, dispatchMCState] = useReducer(
+    multipleChoiceReducer,
+    {
+      selectedChoice: null,
+      validities: {
+        soybeans: false,
+        dryBeans: false,
+        tomato: false,
+        other: false,
+      },
+      formIsValid: false,
+    }
+  );
+
   useEffect(() => {
     //need to change so value goes back to null or false after
-    selectedChoice &&
-    cultivar &&
-    controlMethods &&
-    hotspotDecription &&
-    otherNotes
+    cultivar && controlMethods && hotspotDecription && otherNotes
       ? setCompleted(true)
       : setCompleted(false);
     console.log(isCompleted);
-  }, [selectedChoice, cultivar, controlMethods, hotspotDecription, otherNotes]);
+  }, [cultivar, controlMethods, hotspotDecription, otherNotes]);
 
   //to dipatch actions to the store
   const dispatch = useDispatch();
@@ -58,12 +115,18 @@ const InputFormsScreen = (props) => {
   const presetState = useSelector((state) => state.survey.crop);
 
   //getting values (text or uri) from children textSpeechForm component
-  const handleCropSelection = (value) => {
-    console.log('in the loop');
-    //need more logical for selecting then unselecting
-    setSelectedChoice((prev) => (prev === value ? prev : value));
-    console.log(selectedChoice);
-  };
+  //handling the callback from children components
+  const handleCropSelection = useCallback(
+    (identifier, validity) => {
+      console.log(identifier + '/' + validity);
+      dispatchMCState({
+        type: MULTIPLE_CHOICE_SELECTION,
+        value: identifier,
+        isValid: validity,
+      });
+    },
+    [dispatchMCState]
+  );
 
   const handleCultivarCallback = (value) => {
     setCultivar(value);
@@ -91,7 +154,7 @@ const InputFormsScreen = (props) => {
     if (isCompleted) {
       dispatch(
         surveyActions.addInformation({
-          crop: selectedChoice,
+          crop: multipleChoiceState.selectedChoice,
           cultivar: cultivar,
           controlMethods: controlMethods,
           hotspotDecription: hotspotDecription,
@@ -129,20 +192,24 @@ const InputFormsScreen = (props) => {
             <View style={styles.mutipleChoiceContainer}>
               <Text style={styles.sectionTitles}>Crops</Text>
               <MultipleChoiceButton
-                val={'Soybeans'}
-                onPress={handleCropSelection.bind(this, 'Soybeans')}
+                value={'Soybeans'}
+                handleCropSelection={handleCropSelection}
               />
               <MultipleChoiceButton
-                val={'Dry Beans'}
-                onPress={handleCropSelection.bind(this, 'Dry Beans')}
+                value={'Dry Beans'}
+                handleCropSelection={handleCropSelection}
+                isSelected={multipleChoiceState.validities.dryBeans}
+                //onPress={handleCropSelection}
               />
               <MultipleChoiceButton
-                val={'Tomato'}
-                onPress={handleCropSelection.bind(this, 'Tomato')}
+                value={'Tomato'}
+                handleCropSelection={handleCropSelection}
+                //onPress={handleCropSelection}
               />
               <MultipleChoiceButton
-                val={'Other'}
-                onPress={handleCropSelection.bind(this, 'Other')}
+                value={'Other'}
+                handleCropSelection={handleCropSelection}
+                //onPress={handleCropSelection}
               />
             </View>
             <View style={styles.formsContainer}>
