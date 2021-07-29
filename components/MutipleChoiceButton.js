@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+
 import Colors from '../constants/Colors';
 
 /*
-  val - should be the text held inside the mutiple choice
+  value - should be the text held inside the mutiple choice
   handleCropSelection - callback implemented in parent component
+  isSelected - a boolean value setting the UI of the component
 */
 
 const MultipleChoiceButton = (props) => {
@@ -13,12 +16,19 @@ const MultipleChoiceButton = (props) => {
   //object destructing into consts
   const { value, handleCropSelection } = props;
 
+  let containerState = useSelector((state) => state.mc);
+
   useEffect(() => {
-    try {
-      handleCropSelection(value, isSelected);
-    } catch (e) {
-      console.log(e);
-    }
+    // console.log(containerState);
+    // containerState[value] != isSelected
+    //   ? setSelected(containerState[value])
+    //   : null;
+  }, [containerState]);
+
+  //gets called on inital mounting
+  useEffect(() => {
+    console.log(containerState);
+    handleCropSelection(value, isSelected);
   }, [isSelected]);
 
   return (

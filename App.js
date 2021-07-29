@@ -8,10 +8,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import AppNavigator from './navigation/AppNavigator';
 import surveyReducer from './store/reducers/survey';
 import authReducer from './store/reducers/auth';
+import multipleChoiceReducer from './store/reducers/mutlipleChoice';
 
+//import
 const rootReducer = combineReducers({
   survey: surveyReducer,
   auth: authReducer,
+  mc: multipleChoiceReducer,
 });
 
 //remove the composeWithDevTools on deployment

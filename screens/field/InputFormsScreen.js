@@ -14,6 +14,7 @@ import {
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
+import * as mcActions from '../../store/actions/multipleChoice';
 
 import Dots from 'react-native-dots-pagination';
 
@@ -28,52 +29,6 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const MULTIPLE_CHOICE_SELECTION = 'MULTIPLE_CHOICE_SELECTION';
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-const multipleChoiceReducer = (state, action) => {
-  switch (action.type) {
-    case MULTIPLE_CHOICE_SELECTION:
-      //declaring varibles
-      let currentSelection = state.selectedChoice;
-      let updatedValidities = {
-        ...state,
-        [action.input]: action.isValid,
-      };
-
-      //checking if the action is selecting or deselecting a choice
-      if (action.isValid === true) {
-        //selecting a new option
-        currentSelection = action.value;
-        //changing all other states to false
-        for (const key in updatedValidities) {
-          if (key !== action.input) {
-            updatedValidities = {
-              ...state,
-              [key]: false,
-            };
-          }
-        }
-      } else {
-        //deselecting an option
-        currentSelection = null;
-      }
-
-      let updatedFormIsValid = false;
-
-      //valid if one valitity is true
-      for (const key in updatedValidities) {
-        updatedFormIsValid = updatedFormIsValid || updatedValidities[key];
-      }
-
-      return {
-        selectedChoice: currentSelection,
-        validities: updatedValidities,
-        formIsValid: updatedFormIsValid,
-      };
-
-    default:
-      return state;
-  }
-};
 
 const inputFormReducer = (state, action) => {
   switch (action.type) {
@@ -94,6 +49,7 @@ const inputFormReducer = (state, action) => {
       for (const key in updatedValidities) {
         updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
       }
+
       return {
         formIsValid: updatedFormIsValid,
         inputValidities: updatedValidities,
@@ -118,32 +74,15 @@ const InputFormsScreen = (props) => {
   //presetting the information for persisentence, use the proper survey identifier, in combine reducer
   const presetState = useSelector((state) => state.survey.crop);
 
-  //inital state of multiple choice redux store
-  const [multipleChoiceState, dispatchMCState] = useReducer(
-    multipleChoiceReducer,
-    {
-      selectedChoice: null,
-      validities: {
-        soybeans: false,
-        dryBeans: false,
-        tomato: false,
-        other: false,
-      },
-      formIsValid: false,
-    }
-  );
+  const multipleChoiceState = useSelector((state) => state.mc);
 
   //handling the callback from children components
   const handleCropSelection = useCallback(
     (identifier, validity) => {
       console.log(identifier + '/' + validity);
-      dispatchMCState({
-        type: MULTIPLE_CHOICE_SELECTION,
-        value: identifier,
-        isValid: validity,
-      });
+      dispatch(mcActions.selectOption(identifier, validity));
     },
-    [dispatchMCState]
+    [multipleChoiceState]
   );
 
   //inital state of input form redux store
@@ -233,10 +172,9 @@ const InputFormsScreen = (props) => {
               <MultipleChoiceButton
                 value={'Dry Beans'}
                 handleCropSelection={handleCropSelection}
-                isSelected={multipleChoiceState.validities.dryBeans}
                 //onPress={handleCropSelection}
               />
-              <MultipleChoiceButton
+              {/* <MultipleChoiceButton
                 value={'Tomato'}
                 handleCropSelection={handleCropSelection}
                 //onPress={handleCropSelection}
@@ -245,7 +183,7 @@ const InputFormsScreen = (props) => {
                 value={'Other'}
                 handleCropSelection={handleCropSelection}
                 //onPress={handleCropSelection}
-              />
+              /> */}
             </View>
             <View style={styles.formsContainer}>
               <TextSpeechForm
