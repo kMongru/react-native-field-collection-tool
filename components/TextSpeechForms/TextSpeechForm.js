@@ -32,21 +32,21 @@ const TextSpeechForm = (props) => {
 
   const [value, setValue] = useState(null);
 
+  const { handleInputForm, id } = props;
+
   const textInputHandler = () => {
     //need more form validation on blank spaces
     if (text.trim()) {
       setValue(text);
       setConfirmed(true);
-      console.log(confirmed);
     } else {
       setConfirmed(false);
-      console.log(confirmed);
     }
   };
 
   useEffect(() => {
-    props.parentCallback(value);
-  }, [value]);
+    handleInputForm(id, value, confirmed);
+  }, [value, confirmed]);
 
   //switching the toggle
   const toggleSwitch = () => setAudioMode((previousState) => !previousState);

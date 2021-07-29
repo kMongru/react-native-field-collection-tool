@@ -27,6 +27,7 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const MULTIPLE_CHOICE_SELECTION = 'MULTIPLE_CHOICE_SELECTION';
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const multipleChoiceReducer = (state, action) => {
   switch (action.type) {
@@ -53,7 +54,7 @@ const multipleChoiceReducer = (state, action) => {
         }
       } else {
         //deselecting an option
-        //currentSelection = null;
+        currentSelection = null;
       }
 
       let updatedFormIsValid = false;
@@ -74,16 +75,48 @@ const multipleChoiceReducer = (state, action) => {
   }
 };
 
+const inputFormReducer = (state, action) => {
+  switch (action.type) {
+    case FORM_INPUT_UPDATE:
+      //uses action.input param as key for object
+      const updatedValues = {
+        ...state.inputValues,
+        [action.input]: action.value,
+      };
+      //update validity by combinning with old state and overwritting
+      const updatedValidities = {
+        ...state.inputValidities,
+        [action.input]: action.isValid,
+      };
+
+      let updatedFormIsValid = true;
+      //loop to check if each key returns a valid true state, only remains true if ALL are true
+      for (const key in updatedValidities) {
+        updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+      }
+      return {
+        formIsValid: updatedFormIsValid,
+        inputValidities: updatedValidities,
+        inputValues: updatedValues,
+      };
+
+    default:
+      return state;
+  }
+};
+
 const InputFormsScreen = (props) => {
+  //entire screen state, may be removed
   const [isCompleted, setCompleted] = useState(false);
-  //text/audio information, either string or uri
-  const [cultivar, setCultivar] = useState(null);
-  const [controlMethods, setControlMethods] = useState(null);
-  const [hotspotDecription, setHotspotDecription] = useState(null);
-  const [otherNotes, setOtherNotes] = useState(null);
 
   //information header button
   const [modalVisible, setModalVisible] = useState(false);
+
+  //to dipatch actions to the store
+  const dispatch = useDispatch();
+
+  //presetting the information for persisentence, use the proper survey identifier, in combine reducer
+  const presetState = useSelector((state) => state.survey.crop);
 
   //inital state of multiple choice redux store
   const [multipleChoiceState, dispatchMCState] = useReducer(
@@ -100,21 +133,6 @@ const InputFormsScreen = (props) => {
     }
   );
 
-  useEffect(() => {
-    //need to change so value goes back to null or false after
-    cultivar && controlMethods && hotspotDecription && otherNotes
-      ? setCompleted(true)
-      : setCompleted(false);
-    console.log(isCompleted);
-  }, [cultivar, controlMethods, hotspotDecription, otherNotes]);
-
-  //to dipatch actions to the store
-  const dispatch = useDispatch();
-
-  //presetting the information for persisentence, use the proper survey identifier, in combine reducer
-  const presetState = useSelector((state) => state.survey.crop);
-
-  //getting values (text or uri) from children textSpeechForm component
   //handling the callback from children components
   const handleCropSelection = useCallback(
     (identifier, validity) => {
@@ -128,26 +146,43 @@ const InputFormsScreen = (props) => {
     [dispatchMCState]
   );
 
-  const handleCultivarCallback = (value) => {
-    setCultivar(value);
-  };
+  //inital state of input form redux store
+  const [inputFormState, dispatchFormState] = useReducer(inputFormReducer, {
+    inputValues: {
+      cultivar: '',
+      controlMethods: '',
+      hotspotDescription: '',
+      otherNotes: '',
+    },
+    inputValidities: {
+      cultivar: false,
+      controlMethods: false,
+      hotspotDescription: false,
+      otherNotes: false,
+    },
+    formIsValid: false,
+  });
 
-  const handleControlMethodsCallback = (value) => {
-    setControlMethods(value);
-  };
+  //getting values (text or uri) from children textSpeechForm component
+  const handleInputForm = useCallback(
+    (inputIndentifier, inputValue, inputValidity) => {
+      console.log(inputIndentifier + '/' + inputValue + '/' + inputValidity);
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        input: inputIndentifier,
+        value: inputValue,
+        isValid: inputValidity,
+      });
+    },
+    [dispatchFormState]
+  );
 
-  const handleHotspotDescriptionCallback = (value) => {
-    setHotspotDecription(value);
-  };
-
-  //might be able to pass functions as arguments to reduce redundency
-  const handleOtherNotesCallback = (value) => {
-    if (value) {
-      setOtherNotes(value);
-    } else {
-      setOtherNotes(false);
-    }
-  };
+  //determining if the entire screen is completed
+  useEffect(() => {
+    multipleChoiceState.formIsValid && inputFormState.formIsValid
+      ? setCompleted(true)
+      : setCompleted(false);
+  }, [multipleChoiceState.formIsValid, inputFormState.formIsValid]);
 
   //naviagtion to next page
   const handleNavigation = () => {
@@ -155,10 +190,10 @@ const InputFormsScreen = (props) => {
       dispatch(
         surveyActions.addInformation({
           crop: multipleChoiceState.selectedChoice,
-          cultivar: cultivar,
-          controlMethods: controlMethods,
-          hotspotDecription: hotspotDecription,
-          otherNotes: otherNotes,
+          cultivar: inputFormState.inputValues.cultivar,
+          controlMethods: inputFormState.inputValues.controlMethods,
+          hotspotDecription: inputFormState.inputValues.hotspotDescription,
+          otherNotes: inputFormState.inputValues.otherNotes,
         })
       );
       return props.navigation.navigate('Camera');
@@ -214,32 +249,36 @@ const InputFormsScreen = (props) => {
             </View>
             <View style={styles.formsContainer}>
               <TextSpeechForm
+                id={'cultivar'}
                 title={'Cultivar/Variety'}
                 style={styles.sectionTitles}
                 placeHolderText={'test'}
                 modalText={'variety modal'}
-                parentCallback={handleCultivarCallback}
+                handleInputForm={handleInputForm}
               />
               <TextSpeechForm
+                id={'controlMethods'}
                 title={'Previous Control Methods'}
                 style={styles.sectionTitles}
                 placeHolderText={'test'}
                 modalText={'control modal'}
-                parentCallback={handleControlMethodsCallback}
+                handleInputForm={handleInputForm}
               />
               <TextSpeechForm
+                id={'hotspotDescription'}
                 title={'Hotspot Description'}
                 style={styles.sectionTitles}
                 placeHolderText={'test'}
                 modalText={'hotspot modal'}
-                parentCallback={handleHotspotDescriptionCallback}
+                handleInputForm={handleInputForm}
               />
               <TextSpeechForm
+                id={'otherNotes'}
                 title={'Other Notes'}
                 style={styles.sectionTitles}
                 placeHolderText={'test'}
                 modalText={'others modal'}
-                parentCallback={handleOtherNotesCallback}
+                handleInputForm={handleInputForm}
               />
             </View>
           </ScrollView>
