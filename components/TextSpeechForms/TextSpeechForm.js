@@ -44,6 +44,11 @@ const TextSpeechForm = (props) => {
     }
   };
 
+  const audioInputHandler = (uri, isValid) => {
+    setValue(uri);
+    setConfirmed(isValid);
+  };
+
   useEffect(() => {
     handleInputForm(id, value, confirmed);
   }, [value, confirmed]);
@@ -67,7 +72,7 @@ const TextSpeechForm = (props) => {
         </View>
         {audioMode ? (
           <View>
-            <AudioInput />
+            <AudioInput handleURI={audioInputHandler} />
           </View>
         ) : (
           <View style={styles.inputContainer}>

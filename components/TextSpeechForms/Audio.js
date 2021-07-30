@@ -9,7 +9,7 @@ import Colors from '../../constants/Colors';
 //declaring recording Audio object
 let recording = new Audio.Recording();
 
-const AudioInput = () => {
+const AudioInput = (props) => {
   const [recordedURI, setRecordedURI] = useState(null);
   const [AudioPerm, setAudioPerm] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -21,6 +21,8 @@ const AudioInput = () => {
 
   const [audioLength, setAudioLength] = useState(null);
   const Player = useRef(new Audio.Sound());
+
+  const { handleURI } = props;
 
   useEffect(() => {
     GetPermission();
@@ -78,6 +80,12 @@ const AudioInput = () => {
   };
 
   useEffect(() => {
+    recordedURI === null
+      ? handleURI(recordedURI, false)
+      : handleURI(recordedURI, true);
+  }, [recordedURI]);
+
+  useEffect(() => {
     if (isRecording === true) {
       const timeInterval = setInterval(timer, 1000);
       //return unmounts the interval
@@ -120,6 +128,8 @@ const AudioInput = () => {
   };
 
   const resetSound = () => {
+    setSecondsTimer(0);
+    setMinuteTimer(0);
     setRecordedURI(null);
   };
 
@@ -136,12 +146,13 @@ const AudioInput = () => {
               <View
                 style={{
                   ...styles.iconContainer,
+                  borderRadius: 10,
                   backgroundColor: Colors.darkRed,
                 }}
               >
                 <Ionicons
-                  name={'stop-circle-outline'}
-                  size={40}
+                  name={'stop-outline'}
+                  size={50}
                   color={Colors.white}
                 />
               </View>
@@ -199,7 +210,6 @@ const AudioInput = () => {
           )}
         </View>
       )}
-      {/* <Text>{recordedURI}</Text> */}
     </View>
   );
 };

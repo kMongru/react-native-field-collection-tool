@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer, useCallback } from 'react';
 import {
   View,
+  SafeAreaView,
   Text,
   StyleSheet,
   ScrollView,
@@ -152,15 +153,16 @@ const InputFormsScreen = (props) => {
   }, [props.navigation]);
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.tempCard}>
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.backgroundCard}>
         <KeyboardAvoidingView
           style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
-          behavior='padding' //need to change for andriod
+          behavior='position' //need to change for andriod
           enabled
           keyboardVerticalOffset={100}
         >
           <ScrollView>
+            {/* Multiple Choice Buttons */}
             <View style={styles.mutipleChoiceContainer}>
               <Text style={styles.sectionTitles}>Crops</Text>
               <MultipleChoiceButton
@@ -184,37 +186,42 @@ const InputFormsScreen = (props) => {
                 handleCropSelection={handleCropSelection}
               />
             </View>
+            {/* Text/Audio Forms */}
             <View style={styles.formsContainer}>
               <TextSpeechForm
                 id={'cultivar'}
                 title={'Cultivar/Variety'}
                 style={styles.sectionTitles}
-                placeHolderText={'test'}
-                modalText={'variety modal'}
+                placeHolderText={'A breif description of the cultivar...'}
+                modalText={'Can be a simple one line identification!'}
                 handleInputForm={handleInputForm}
               />
               <TextSpeechForm
                 id={'controlMethods'}
                 title={'Previous Control Methods'}
                 style={styles.sectionTitles}
-                placeHolderText={'test'}
-                modalText={'control modal'}
+                placeHolderText={'A breif description of control methods...'}
+                modalText={
+                  'Please include pesticides used and duration used in the previous _ years'
+                }
                 handleInputForm={handleInputForm}
               />
               <TextSpeechForm
                 id={'hotspotDescription'}
                 title={'Hotspot Description'}
                 style={styles.sectionTitles}
-                placeHolderText={'test'}
-                modalText={'hotspot modal'}
+                placeHolderText={'A breif description of the hotspot...'}
+                modalText={'Try to include the ___'}
                 handleInputForm={handleInputForm}
               />
               <TextSpeechForm
                 id={'otherNotes'}
                 title={'Other Notes'}
                 style={styles.sectionTitles}
-                placeHolderText={'test'}
-                modalText={'others modal'}
+                placeHolderText={
+                  'Other notes you wish to include (optional)...'
+                }
+                modalText={'This may include...'}
                 handleInputForm={handleInputForm}
               />
             </View>
@@ -229,14 +236,14 @@ const InputFormsScreen = (props) => {
         </View>
       </View>
       {/* Information Popup */}
-      {/* <Popup
+      <Popup
         modalText={
           'You can click on the titles of each section, such as "Cultivar" for additional information!'
         }
         modalVisible={modalVisible}
         onPress={() => setModalVisible(!modalVisible)}
-      /> */}
-    </View>
+      />
+    </SafeAreaView>
   );
 };
 
@@ -266,9 +273,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tempCard: {
+  backgroundCard: {
     backgroundColor: Colors.backgroundGrey,
-    marginTop: 75,
+    marginTop: '17%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     overflow: 'hidden',
@@ -277,8 +284,8 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: '600',
-    paddingTop: 20,
-    paddingLeft: 20,
+    paddingVertical: '2%',
+    paddingLeft: '4%',
   },
   mutipleChoiceContainer: {
     borderTopLeftRadius: 25,
@@ -290,10 +297,10 @@ const styles = StyleSheet.create({
   bottomCard: {
     backgroundColor: Colors.background,
     width: DEVICE_WIDTH,
-    height: 80,
+    height: '15%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingBottom: 100,
+    // paddingBottom: '5%',
   },
   informationLogo: {
     height: 30,
