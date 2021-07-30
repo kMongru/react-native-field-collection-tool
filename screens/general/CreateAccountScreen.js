@@ -170,7 +170,7 @@ const CreateAccountScreen = (props) => {
                 required
                 minLength={5}
                 autoCapitalize='none'
-                errorText='Please enter a valid password.'
+                errorText='Password must be longer then 5 characters.'
                 onInputChange={inputChangeHandler}
                 initialValue=''
               />
