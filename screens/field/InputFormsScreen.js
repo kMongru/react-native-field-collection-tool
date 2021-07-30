@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
   Dimensions,
   KeyboardAvoidingView,
@@ -79,7 +78,6 @@ const InputFormsScreen = (props) => {
   //handling the callback from children components
   const handleCropSelection = useCallback(
     (identifier, validity) => {
-      console.log(identifier + '/' + validity);
       dispatch(mcActions.selectOption(identifier, validity));
     },
     [multipleChoiceState]
@@ -166,24 +164,25 @@ const InputFormsScreen = (props) => {
             <View style={styles.mutipleChoiceContainer}>
               <Text style={styles.sectionTitles}>Crops</Text>
               <MultipleChoiceButton
-                value={'Soybeans'}
+                id={'soybeans'}
+                title={'Soybeans'}
                 handleCropSelection={handleCropSelection}
               />
               <MultipleChoiceButton
-                value={'Dry Beans'}
+                id={'dryBeans'}
+                title={'Dry Beans'}
                 handleCropSelection={handleCropSelection}
-                //onPress={handleCropSelection}
-              />
-              {/* <MultipleChoiceButton
-                value={'Tomato'}
-                handleCropSelection={handleCropSelection}
-                //onPress={handleCropSelection}
               />
               <MultipleChoiceButton
-                value={'Other'}
+                id={'tomato'}
+                title={'Tomato'}
                 handleCropSelection={handleCropSelection}
-                //onPress={handleCropSelection}
-              /> */}
+              />
+              <MultipleChoiceButton
+                id={'other'}
+                title={'Other'}
+                handleCropSelection={handleCropSelection}
+              />
             </View>
             <View style={styles.formsContainer}>
               <TextSpeechForm

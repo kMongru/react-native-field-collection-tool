@@ -5,64 +5,62 @@ import { useSelector } from 'react-redux';
 import Colors from '../constants/Colors';
 
 /*
-  value - should be the text held inside the mutiple choice
+  id - the key for accessing the redux state
+  title - should be the text held inside the mutiple choice
   handleCropSelection - callback implemented in parent component
-  isSelected - a boolean value setting the UI of the component
 */
 
 const MultipleChoiceButton = (props) => {
   const [isSelected, setSelected] = useState(false);
 
   //object destructing into consts
-  const { value, handleCropSelection } = props;
+  const { id, title, handleCropSelection } = props;
 
-  let containerState = useSelector((state) => state.mc);
+  let containerState = useSelector((state) => state.mc.validities);
 
+  //gets called on inital mounting, relays state change of isSelected
   useEffect(() => {
-    // console.log(containerState);
-    // containerState[value] != isSelected
-    //   ? setSelected(containerState[value])
-    //   : null;
-  }, [containerState]);
-
-  //gets called on inital mounting
-  useEffect(() => {
-    console.log(containerState);
-    handleCropSelection(value, isSelected);
+    //to avoid double calling, only called on true state
+    isSelected ? handleCropSelection(id, isSelected) : null;
   }, [isSelected]);
+
+  //changes the UI based on the state
+  useEffect(() => {
+    containerState[id] != isSelected ? setSelected(containerState[id]) : null;
+  }, [containerState[id]]);
 
   return (
     <View style={{ ...props.style, ...styles }}>
       <TouchableOpacity
-        style={isSelected ? styles.buttonEnabled : styles.buttonDisabled}
+        style={
+          isSelected
+            ? { ...styles.button, ...styles.buttonEnabled }
+            : { ...styles.button, ...styles.buttonDisabled }
+        }
         onPress={() => {
           setSelected((prevState) => !prevState);
         }}
       >
-        <Text style={styles.text}>{value}</Text>
+        <Text style={styles.text}>{title}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonEnabled: {
+  button: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 40,
-    marginVertical: 10,
+    marginHorizontal: '7%',
+    marginVertical: '3%',
     borderRadius: 10,
     borderWidth: 1,
+  },
+  buttonEnabled: {
     borderColor: Colors.white,
     backgroundColor: Colors.darkPurple,
   },
   buttonDisabled: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 40,
-    marginVertical: 10,
-    borderRadius: 10,
-    borderWidth: 1,
     borderColor: Colors.darkPurple,
   },
   text: {

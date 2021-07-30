@@ -18,7 +18,7 @@ const multipleChoiceReducer = (state = initalState, action) => {
       //declaring varibles
       let currentSelection = state.selectedChoice;
       let updatedValidities = {
-        ...state,
+        ...state.validities,
         [action.input]: action.isValid,
       };
 
@@ -26,11 +26,11 @@ const multipleChoiceReducer = (state = initalState, action) => {
       if (action.isValid === true) {
         //selecting a new option
         currentSelection = action.input;
-        //changing all other states to false
+        //changing all other valstates to false
         for (const key in updatedValidities) {
           if (key !== action.input) {
             updatedValidities = {
-              ...state,
+              ...updatedValidities,
               [key]: false,
             };
           }
