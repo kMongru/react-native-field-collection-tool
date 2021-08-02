@@ -213,6 +213,7 @@ export const screenOptions = (navData) => {
       color: Colors.white,
     },
     headerTransparent: true,
+    headerTintColor: Colors.textGrey,
   };
 };
 

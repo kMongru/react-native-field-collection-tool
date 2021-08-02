@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
@@ -124,6 +126,7 @@ const LoginScreen = (props) => {
           <Text style={styles.headerTitle}>Log In</Text>
           <Text style={styles.instructionText}>Please log in to continue</Text>
         </View>
+
         <View style={styles.centeredItems}>
           {/* Input Forms */}
           <View style={styles.formContainer}>
@@ -204,15 +207,19 @@ const LoginScreen = (props) => {
 export const screenOptions = {
   headerTitle: '',
   headerTransparent: true,
+  headerTintColor: Colors.textGrey,
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   screen: {
     flex: 1,
     backgroundColor: Colors.background,
   },
   textContainer: {
-    marginTop: '15%',
+    marginTop: Platform.OS === 'ios' ? '15%' : '20%',
     marginHorizontal: '5%',
   },
   headerTitle: {

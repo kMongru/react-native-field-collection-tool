@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Pressable,
   Image,
+  Platform,
 } from 'react-native';
 
 //use selector in the textForm??
@@ -263,6 +264,7 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
+    headerTintColor: Colors.textGrey,
   };
 };
 
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
   },
   backgroundCard: {
     backgroundColor: Colors.backgroundGrey,
-    marginTop: '17%',
+    marginTop: Platform.OS === 'ios' ? '17%' : '25%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     overflow: 'hidden',
@@ -300,7 +302,6 @@ const styles = StyleSheet.create({
     height: '15%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    // paddingBottom: '5%',
   },
   informationLogo: {
     height: 30,

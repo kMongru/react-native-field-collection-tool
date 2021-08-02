@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 100,
+    textAlign: 'left',
+    textAlignVertical: 'top',
   },
 });
 

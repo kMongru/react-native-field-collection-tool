@@ -90,6 +90,7 @@ const ReportIssueScreen = (props) => {
 export const screenOptions = {
   headerTitle: '',
   headerTransparent: true,
+  headerTintColor: Colors.textGrey,
 };
 
 const styles = StyleSheet.create({

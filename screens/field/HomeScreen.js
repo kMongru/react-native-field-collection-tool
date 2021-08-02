@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import { DEVICE_WIDTH } from '../../constants/Screen';
 import NextButton from '../../components/NextButton';
 
 const HomeScreen = (props) => {
@@ -108,12 +109,12 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
   },
   bottomButton: {
-    width: 100,
-    height: 100,
+    width: DEVICE_WIDTH / 4,
+    height: DEVICE_WIDTH / 4,
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    margin: '2%',
     backgroundColor: Colors.darkRed,
     borderRadius: 10,
     borderColor: Colors.lightRed,

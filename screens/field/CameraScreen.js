@@ -259,6 +259,7 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
+    headerTintColor: Colors.white,
   };
 };
 

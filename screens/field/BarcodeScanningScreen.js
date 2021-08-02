@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Dimensions } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Dimensions,
+  SafeAreaView,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -11,15 +18,12 @@ import * as surveyActions from '../../store/actions/survey';
   testing code128 -> 1030832, see barcode scanning props
 */
 
-//make these into env constants
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
-
 const BarcodeScanningScreen = (props) => {
+  //permission state mangement
   const [hasPermission, setHasPermission] = useState(null);
 
   //need to reset inital value to false
-  const [scanned, setScanned] = useState(false);
+  const [scanned, setScanned] = useState(true);
 
   //will get the scanned data as a state
   const [scannedData, setScannedData] = useState(null);
@@ -27,6 +31,7 @@ const BarcodeScanningScreen = (props) => {
   //to dipatch actions to the store
   const dispatch = useDispatch();
 
+  //asking for permission
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -36,7 +41,6 @@ const BarcodeScanningScreen = (props) => {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    //remeber it won't be avaible till the next rerender cycle
     setScannedData(data);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
@@ -48,6 +52,7 @@ const BarcodeScanningScreen = (props) => {
     return <Text>No access to camera</Text>;
   }
 
+  //navigation to next screen
   const handleNavigation = () => {
     if (scanned) {
       //need to access the method from the action file
@@ -59,7 +64,8 @@ const BarcodeScanningScreen = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* BarCodeType determines the type that can get scanned */}
       <BarCodeScanner
         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code128]}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -81,13 +87,20 @@ const BarcodeScanningScreen = (props) => {
         isDisabled={!scanned}
         nextArrow={true}
       />
-    </View>
+    </SafeAreaView>
   );
+};
+
+export const screenOptions = {
+  headerTitle: '',
+  headerTransparent: true,
+  headerTintColor: Colors.textGrey,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.background,
   },
   instructionalTextContainer: {
     flex: 1,
@@ -110,10 +123,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {},
 });
-
-export const screenOptions = {
-  headerTitle: '',
-  headerTransparent: true,
-};
 
 export default BarcodeScanningScreen;

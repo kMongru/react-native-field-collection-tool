@@ -105,7 +105,7 @@ const LocationScreen = (props) => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.tempCard}>
+      <View style={styles.backgroundCard}>
         <Text style={styles.title}>Location</Text>
         <View style={styles.greenCard}>
           <View style={styles.dashedBoarder}>
@@ -190,6 +190,7 @@ export const screenOptions = (navData) => {
       );
     },
     headerTransparent: true,
+    headerTintColor: Colors.textGrey,
   };
 };
 
@@ -206,9 +207,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tempCard: {
+  backgroundCard: {
     flex: 1,
-    marginTop: 75,
+    marginTop: Platform.OS === 'ios' ? '17%' : '25%',
     width: DEVICE_WIDTH,
     backgroundColor: Colors.backgroundGrey,
     borderTopLeftRadius: 25,
@@ -251,6 +252,7 @@ const styles = StyleSheet.create({
   },
   locationDisabled: {
     borderColor: Colors.lightPurple,
+    elevation: 0,
   },
   ORtext: {
     width: '100%',

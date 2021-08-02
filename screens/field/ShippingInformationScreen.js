@@ -41,32 +41,9 @@ const ShippingInformationScreen = (props) => {
 export const screenOptions = {
   headerTitle: '',
   headerTransparent: true,
+  headerTintColor: Colors.textGrey,
 };
 
-// export const screenOptions = (navData) => {
-//   return {
-//     headerLeft: () => (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item
-//           title='Use Previous'
-//           iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'}
-//           onPress={() => {}}
-//         />
-//       </HeaderButtons>
-//     ),
-//     headerRight: () => (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item
-//           title='Cart'
-//           iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'}
-//           onPress={() => {
-//             navData.navigation.navigate('Cart');
-//           }}
-//         />
-//       </HeaderButtons>
-//     ),
-//   };
-// };
 const styles = StyleSheet.create({
   screen: {
     flex: 1,

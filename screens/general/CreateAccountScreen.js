@@ -8,6 +8,8 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
+  Platform,
+  ScrollView,
 } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -137,66 +139,68 @@ const CreateAccountScreen = (props) => {
         </View>
         <View style={styles.centerItems}>
           <View style={styles.inputFormContainer}>
-            <View style={styles.inputLineContainer}>
-              <View style={{ width: '90%', marginVertical: '5%' }}>
-                <Text style={styles.label}>Orgainization</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder='orgainization'
-                  onEndEditing={textHandler}
-                  onChangeText={(text) => setText(text)}
+            <ScrollView style={{ flex: 1, width: '100%' }}>
+              <View style={styles.inputLineContainer}>
+                <View style={{ width: '90%', marginVertical: '5%' }}>
+                  <Text style={styles.label}>Orgainization</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder='orgainization'
+                    onEndEditing={textHandler}
+                    onChangeText={(text) => setText(text)}
+                  />
+                </View>
+              </View>
+              <View style={styles.inputLineContainer}>
+                <AuthInput
+                  id='email'
+                  label='Email Address'
+                  keyboardType='email-address'
+                  required
+                  email
+                  autoCapitalize='none'
+                  errorText='Please enter a valid email address.'
+                  onInputChange={inputChangeHandler}
+                  initialValue=''
                 />
               </View>
-            </View>
-            <View style={styles.inputLineContainer}>
-              <AuthInput
-                id='email'
-                label='Email Address'
-                keyboardType='email-address'
-                required
-                email
-                autoCapitalize='none'
-                errorText='Please enter a valid email address.'
-                onInputChange={inputChangeHandler}
-                initialValue=''
-              />
-            </View>
-            <View style={styles.inputLineContainer}>
-              <AuthInput
-                id='password'
-                label='Password'
-                keyboardType='default'
-                secureTextEntry={true}
-                required
-                minLength={5}
-                autoCapitalize='none'
-                errorText='Password must be longer then 5 characters.'
-                onInputChange={inputChangeHandler}
-                initialValue=''
-              />
-            </View>
-            <View style={styles.inputLineContainer}>
-              <View style={{ width: '90%', marginVertical: '5%' }}>
-                <Text style={styles.label}>confirmed</Text>
-                <TextInput
-                  initialValue=''
-                  autoCapitalize='none'
+              <View style={styles.inputLineContainer}>
+                <AuthInput
+                  id='password'
+                  label='Password'
+                  keyboardType='default'
                   secureTextEntry={true}
                   required
-                  style={styles.input}
-                  placeholder='confirm'
-                  onEndEditing={handlePasswordConfirmation}
-                  onChangeText={(confirmText) => setConfirmText(confirmText)}
-                  onBlur={lostFocusHandler}
+                  minLength={5}
+                  autoCapitalize='none'
+                  errorText='Password must be longer then 5 characters.'
+                  onInputChange={inputChangeHandler}
+                  initialValue=''
                 />
-                {!formState.inputValidities.confirmedPassword &&
-                  formState.touched && (
-                    <View style={styles.errorContainer}>
-                      <Text style={styles.errorText}>Uh Oh</Text>
-                    </View>
-                  )}
               </View>
-            </View>
+              <View style={styles.inputLineContainer}>
+                <View style={{ width: '90%', marginVertical: '5%' }}>
+                  <Text style={styles.label}>Confirm Password</Text>
+                  <TextInput
+                    initialValue=''
+                    autoCapitalize='none'
+                    secureTextEntry={true}
+                    required
+                    style={styles.input}
+                    placeholder='confirm'
+                    onEndEditing={handlePasswordConfirmation}
+                    onChangeText={(confirmText) => setConfirmText(confirmText)}
+                    onBlur={lostFocusHandler}
+                  />
+                  {!formState.inputValidities.confirmedPassword &&
+                    formState.touched && (
+                      <View style={styles.errorContainer}>
+                        <Text style={styles.errorText}>Uh Oh</Text>
+                      </View>
+                    )}
+                </View>
+              </View>
+            </ScrollView>
           </View>
           {/* Login Button */}
           <TouchableOpacity
@@ -229,6 +233,7 @@ const CreateAccountScreen = (props) => {
 export const screenOptions = {
   headerTitle: '',
   headerTransparent: true,
+  headerTintColor: Colors.textGrey,
 };
 
 const styles = StyleSheet.create({
@@ -237,7 +242,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   screenTitleContainer: {
-    marginTop: '10%',
+    marginTop: Platform.OS === 'ios' ? '15%' : '20%',
     marginHorizontal: '5%',
     width: '30%',
   },
@@ -285,7 +290,7 @@ const styles = StyleSheet.create({
     height: '10%',
     borderRadius: 15,
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 20,
     marginHorizontal: '20%',
     justifyContent: 'center',
     alignItems: 'center',
