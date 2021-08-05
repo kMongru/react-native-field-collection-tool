@@ -19,8 +19,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
 import * as Location from 'expo-location';
 
-import Dots from 'react-native-dots-pagination';
-
 import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
@@ -179,14 +177,15 @@ export const screenOptions = (navData) => {
     headerTitle: () => {
       return (
         //see offical npm docs for all information relationing to Dot props
-        <Dots
-          length={3}
-          active={2}
-          activeDotHeight={15}
-          activeDotWidth={15}
-          activeColor={Colors.primaryGreen}
-          passiveColor={Colors.backgroundGrey}
-        />
+        // <Dots
+        //   length={3}
+        //   active={2}
+        //   activeDotHeight={15}
+        //   activeDotWidth={15}
+        //   activeColor={Colors.primaryGreen}
+        //   passiveColor={Colors.backgroundGrey}
+        // />
+        <Text>Dots Placeholder</Text>
       );
     },
     headerTransparent: true,

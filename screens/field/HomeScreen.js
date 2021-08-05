@@ -1,5 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+//using AsyncStorage for data persisentence! For the 'do not show again' feature of the modal
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Screen';
@@ -9,11 +17,35 @@ const HomeScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [showModalOnce, setShowModalOnce] = useState(false);
 
+  const storeData = async (value) => {
+    try {
+      //can only store string values
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('showPopupOnce', jsonValue);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('showPopupOnce');
+      //must parse value to get boolean
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   const openModal = () => {
     setModalVisible(true);
   };
 
-  const handleNavigation = () => {
+  const decideNavigation = () => {
+    getData ? handleScanningNavigation() : setModalVisible(true);
+  };
+
+  const handleScanningNavigation = () => {
     props.navigation.navigate('BarcodeScanning');
   };
 
@@ -26,7 +58,7 @@ const HomeScreen = (props) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <Text style={styles.title}>Home</Text>
       <View style={styles.bodyTextContainer}>
         <Text style={styles.bodyText}>
@@ -39,7 +71,7 @@ const HomeScreen = (props) => {
         {/*currenly skipping over the modal */}
         <NextButton
           buttonName={'Start scanning the sample!'}
-          onPress={handleNavigation}
+          onPress={handleScanningNavigation}
           isDisabled={false}
           enabledStyle={{ backgroundColor: Colors.primaryGreen }}
         />
@@ -62,7 +94,7 @@ const HomeScreen = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -82,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.white,
-    marginTop: '15%',
+    marginTop: '10%',
     width: '100%',
     textAlign: 'left',
     padding: '10%',
@@ -111,7 +143,7 @@ const styles = StyleSheet.create({
   bottomButton: {
     width: DEVICE_WIDTH / 4,
     height: DEVICE_WIDTH / 4,
-    padding: 10,
+    padding: 6,
     justifyContent: 'center',
     alignItems: 'center',
     margin: '2%',

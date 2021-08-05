@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Keyboard,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Platform,
   ScrollView,
@@ -16,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as authActions from '../../store/actions/auth';
 import AuthInput from '../../components/AuthInput';
 import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Colors from '../../constants/Colors';
 
 //implement the same state managment here?
@@ -91,7 +93,6 @@ const CreateAccountScreen = (props) => {
     const password = formState.inputValues.password;
     const confirmedPassword = confirmText;
 
-    console.log(formState);
     if (password != null && password === confirmedPassword) {
       //could be changed to its own action, just update validity
       validity = true;
@@ -115,7 +116,6 @@ const CreateAccountScreen = (props) => {
   //dispatch a login action to the store to switch to new stack
   const handleLogin = async () => {
     //dispatch a login action to the store to switch to new stack
-    console.log(formState.inputValues.password);
     let action = authActions.signup(
       formState.inputValues.email,
       formState.inputValues.confirmedPassword,
@@ -139,13 +139,13 @@ const CreateAccountScreen = (props) => {
         </View>
         <View style={styles.centerItems}>
           <View style={styles.inputFormContainer}>
-            <ScrollView style={{ flex: 1, width: '100%' }}>
+            <KeyboardAwareScrollView enableOnAndroid style={{ width: '100%' }}>
               <View style={styles.inputLineContainer}>
                 <View style={{ width: '90%', marginVertical: '5%' }}>
                   <Text style={styles.label}>Orgainization</Text>
                   <TextInput
                     style={styles.input}
-                    placeholder='orgainization'
+                    placeholder='Enter orgainization here...'
                     onEndEditing={textHandler}
                     onChangeText={(text) => setText(text)}
                   />
@@ -156,6 +156,7 @@ const CreateAccountScreen = (props) => {
                   id='email'
                   label='Email Address'
                   keyboardType='email-address'
+                  placeholder='Enter your email here...'
                   required
                   email
                   autoCapitalize='none'
@@ -170,6 +171,7 @@ const CreateAccountScreen = (props) => {
                   label='Password'
                   keyboardType='default'
                   secureTextEntry={true}
+                  placeholder='Enter a secure password here...'
                   required
                   minLength={5}
                   autoCapitalize='none'
@@ -187,7 +189,7 @@ const CreateAccountScreen = (props) => {
                     secureTextEntry={true}
                     required
                     style={styles.input}
-                    placeholder='confirm'
+                    placeholder='Re-type password here...'
                     onEndEditing={handlePasswordConfirmation}
                     onChangeText={(confirmText) => setConfirmText(confirmText)}
                     onBlur={lostFocusHandler}
@@ -195,13 +197,16 @@ const CreateAccountScreen = (props) => {
                   {!formState.inputValidities.confirmedPassword &&
                     formState.touched && (
                       <View style={styles.errorContainer}>
-                        <Text style={styles.errorText}>Uh Oh</Text>
+                        <Text style={styles.errorText}>
+                          Password must match!
+                        </Text>
                       </View>
                     )}
                 </View>
               </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
           </View>
+
           {/* Login Button */}
           <TouchableOpacity
             style={
@@ -270,7 +275,7 @@ const styles = StyleSheet.create({
   },
   inputLineContainer: {
     flex: 1,
-    width: '90%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },

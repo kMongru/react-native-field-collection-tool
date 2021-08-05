@@ -19,8 +19,6 @@ import * as surveyActions from '../../store/actions/survey';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
-import Dots from 'react-native-dots-pagination';
-
 import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
@@ -46,8 +44,9 @@ const CameraScreen = (props) => {
 
   const dispatch = useDispatch();
 
+  //need to change back to false for deployment
   useEffect(() => {
-    imageRoll[0] != null ? setIsCompleted(true) : setIsCompleted(false);
+    imageRoll[0] != null ? setIsCompleted(true) : setIsCompleted(true);
   }, [imageRoll]);
 
   //getting permission to use Camera
@@ -137,7 +136,7 @@ const CameraScreen = (props) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <View style={styles.cameraContainer}>
         <Camera
           ref={(ref) => setCamera(ref)}
@@ -239,7 +238,7 @@ const CameraScreen = (props) => {
         modalVisible={modalVisible}
         onPress={() => setModalVisible(!modalVisible)}
       /> */}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -248,14 +247,15 @@ export const screenOptions = (navData) => {
     headerTitle: () => {
       return (
         //see offical npm docs for all information relationing to Dot props
-        <Dots
-          length={3}
-          active={1}
-          activeDotHeight={15}
-          activeDotWidth={15}
-          activeColor={Colors.primaryGreen}
-          passiveColor={Colors.backgroundGrey}
-        />
+        // <Dots
+        //   length={3}
+        //   active={1}
+        //   activeDotHeight={15}
+        //   activeDotWidth={15}
+        //   activeColor={Colors.primaryGreen}
+        //   passiveColor={Colors.backgroundGrey}
+        // />
+        <Text>Dots Placeholder</Text>
       );
     },
     headerTransparent: true,

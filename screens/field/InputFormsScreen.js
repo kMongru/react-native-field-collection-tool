@@ -17,8 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as surveyActions from '../../store/actions/survey';
 import * as mcActions from '../../store/actions/multipleChoice';
 
-import Dots from 'react-native-dots-pagination';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Popup from '../../components/Popup';
 import MultipleChoiceButton from '../../components/MutipleChoiceButton';
 import TextSpeechForm from '../../components/TextSpeechForms/TextSpeechForm';
@@ -156,79 +155,80 @@ const InputFormsScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.backgroundCard}>
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
           behavior='position' //need to change for andriod
           enabled
           keyboardVerticalOffset={100}
         >
-          <ScrollView>
-            {/* Multiple Choice Buttons */}
-            <View style={styles.mutipleChoiceContainer}>
-              <Text style={styles.sectionTitles}>Crops</Text>
-              <MultipleChoiceButton
-                id={'soybeans'}
-                title={'Soybeans'}
-                handleCropSelection={handleCropSelection}
-              />
-              <MultipleChoiceButton
-                id={'dryBeans'}
-                title={'Dry Beans'}
-                handleCropSelection={handleCropSelection}
-              />
-              <MultipleChoiceButton
-                id={'tomato'}
-                title={'Tomato'}
-                handleCropSelection={handleCropSelection}
-              />
-              <MultipleChoiceButton
-                id={'other'}
-                title={'Other'}
-                handleCropSelection={handleCropSelection}
-              />
-            </View>
-            {/* Text/Audio Forms */}
-            <View style={styles.formsContainer}>
-              <TextSpeechForm
-                id={'cultivar'}
-                title={'Cultivar/Variety'}
-                style={styles.sectionTitles}
-                placeHolderText={'A breif description of the cultivar...'}
-                modalText={'Can be a simple one line identification!'}
-                handleInputForm={handleInputForm}
-              />
-              <TextSpeechForm
-                id={'controlMethods'}
-                title={'Previous Control Methods'}
-                style={styles.sectionTitles}
-                placeHolderText={'A breif description of control methods...'}
-                modalText={
-                  'Please include pesticides used and duration used in the previous _ years'
-                }
-                handleInputForm={handleInputForm}
-              />
-              <TextSpeechForm
-                id={'hotspotDescription'}
-                title={'Hotspot Description'}
-                style={styles.sectionTitles}
-                placeHolderText={'A breif description of the hotspot...'}
-                modalText={'Try to include the ___'}
-                handleInputForm={handleInputForm}
-              />
-              <TextSpeechForm
-                id={'otherNotes'}
-                title={'Other Notes'}
-                style={styles.sectionTitles}
-                placeHolderText={
-                  'Other notes you wish to include (optional)...'
-                }
-                modalText={'This may include...'}
-                handleInputForm={handleInputForm}
-              />
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          <ScrollView> */}
+        <KeyboardAwareScrollView style={{ flex: 1 }}>
+          {/* Multiple Choice Buttons */}
+          <View style={styles.mutipleChoiceContainer}>
+            <Text style={styles.sectionTitles}>Crops</Text>
+            <MultipleChoiceButton
+              id={'soybeans'}
+              title={'Soybeans'}
+              handleCropSelection={handleCropSelection}
+            />
+            <MultipleChoiceButton
+              id={'dryBeans'}
+              title={'Dry Beans'}
+              handleCropSelection={handleCropSelection}
+            />
+            <MultipleChoiceButton
+              id={'tomato'}
+              title={'Tomato'}
+              handleCropSelection={handleCropSelection}
+            />
+            <MultipleChoiceButton
+              id={'other'}
+              title={'Other'}
+              handleCropSelection={handleCropSelection}
+            />
+          </View>
+          {/* Text/Audio Forms */}
+          <View style={styles.formsContainer}>
+            <TextSpeechForm
+              id={'cultivar'}
+              title={'Cultivar/Variety'}
+              style={styles.sectionTitles}
+              placeHolderText={'A breif description of the cultivar...'}
+              modalText={'Can be a simple one line identification!'}
+              handleInputForm={handleInputForm}
+            />
+            <TextSpeechForm
+              id={'controlMethods'}
+              title={'Previous Control Methods'}
+              style={styles.sectionTitles}
+              placeHolderText={'A breif description of control methods...'}
+              modalText={
+                'Please include pesticides used and duration used in the previous _ years'
+              }
+              handleInputForm={handleInputForm}
+            />
+            <TextSpeechForm
+              id={'hotspotDescription'}
+              title={'Hotspot Description'}
+              style={styles.sectionTitles}
+              placeHolderText={'A breif description of the hotspot...'}
+              modalText={'Try to include the ___'}
+              handleInputForm={handleInputForm}
+            />
+            <TextSpeechForm
+              id={'otherNotes'}
+              title={'Other Notes'}
+              style={styles.sectionTitles}
+              placeHolderText={'Other notes you wish to include (optional)...'}
+              modalText={'This may include...'}
+              handleInputForm={handleInputForm}
+            />
+          </View>
+        </KeyboardAwareScrollView>
+        {/* </ScrollView>
+        </KeyboardAvoidingView> */}
         <View style={styles.bottomCard}>
+          {/* Next Button */}
           <NextButton
             onPress={handleNavigation}
             isDisabled={!isCompleted}
@@ -253,14 +253,15 @@ export const screenOptions = (navData) => {
     headerTitle: () => {
       return (
         //see offical npm docs for all information relationing to Dot props
-        <Dots
-          length={3}
-          active={0}
-          activeDotHeight={15}
-          activeDotWidth={15}
-          activeColor={Colors.primaryGreen}
-          passiveColor={Colors.backgroundGrey}
-        />
+        // <Dots
+        //   length={3}
+        //   active={0}
+        //   activeDotHeight={15}
+        //   activeDotWidth={15}
+        //   activeColor={Colors.primaryGreen}
+        //   passiveColor={Colors.backgroundGrey}
+        // />
+        <Text>Dots Placeholder</Text>
       );
     },
     headerTransparent: true,

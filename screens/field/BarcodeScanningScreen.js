@@ -23,7 +23,7 @@ const BarcodeScanningScreen = (props) => {
   const [hasPermission, setHasPermission] = useState(null);
 
   //need to reset inital value to false
-  const [scanned, setScanned] = useState(true);
+  const [scanned, setScanned] = useState(false);
 
   //will get the scanned data as a state
   const [scannedData, setScannedData] = useState(null);
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 20,
-    marginBottom: 60,
+    marginBottom: '20%',
   },
   instructionText: {
     fontSize: 20,
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
     flex: 3,
     borderColor: Colors.white,
     borderWidth: 3,
-    marginBottom: 150,
-    marginHorizontal: 30,
-    maxHeight: 100,
+    marginBottom: '40%',
+    marginHorizontal: '8%',
+    maxHeight: '15%',
   },
   buttonContainer: {},
 });

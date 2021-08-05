@@ -72,7 +72,6 @@ const AudioInput = (props) => {
       console.log('stop recording' + status.durationMillis);
       setAudioLength(status.durationMillis / 1000); //here is the length in seconds
       setRecordedURI(result); // Here is the URI
-      recording = new Audio.Recording();
       setIsRecording(false);
     } catch (error) {
       console.log(error);
@@ -128,6 +127,7 @@ const AudioInput = (props) => {
   };
 
   const resetSound = () => {
+    recording = new Audio.Recording();
     setSecondsTimer(0);
     setMinuteTimer(0);
     setRecordedURI(null);

@@ -6,22 +6,25 @@ import {
   Keyboard,
   ScrollView,
   TouchableWithoutFeedback,
+  Text,
 } from 'react-native';
 
 const KeyboardAvoidingWrapper = ({ children }) => {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-      style={{
-        flex: 1,
-        backgroundColor: 'red',
-      }}
-    >
-      {/* TouchableW/OFeedback needs only a single child component */}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: 'green' }}>{children}</View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <Text></Text>
+    // {/* TouchableW/OFeedback requires only a single child component */}
+    // <ScrollView>
+    //   <KeyboardAvoidingView
+    //   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    //   keyboardVerticalOffset={50}
+    //   style={{
+    //     width: '100%',
+    //     height: '100%',
+    //     backgroundColor: 'red',
+    //   }}>
+    //     {children}
+    //   </KeyboardAvoidingView>
+    // </ScrollView>
   );
 };
 

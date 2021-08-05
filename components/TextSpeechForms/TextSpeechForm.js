@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Platform,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   TouchableOpacity,
@@ -108,6 +107,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   input: {
+    color: 'white',
     textAlign: 'left',
     //so the text isn't directly touching the container
     paddingHorizontal: 8,

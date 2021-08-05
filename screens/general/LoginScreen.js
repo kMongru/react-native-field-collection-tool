@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as authActions from '../../store/actions/auth';
 import AuthInput from '../../components/AuthInput';
 import Colors from '../../constants/Colors';
+import KeyboardAvoidingWrapper from '../../components/KeyboardAvoidingWrapper';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -127,8 +128,15 @@ const LoginScreen = (props) => {
           <Text style={styles.instructionText}>Please log in to continue</Text>
         </View>
 
-        <View style={styles.centeredItems}>
-          {/* Input Forms */}
+        {/* Input Forms */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{
+            flex: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <View style={styles.formContainer}>
             <AuthInput
               id='email'
@@ -159,7 +167,9 @@ const LoginScreen = (props) => {
               </TouchableOpacity>
             </View>
           </View>
+        </KeyboardAvoidingView>
 
+        <View style={styles.centeredItems}>
           {/* Login Button */}
           <TouchableOpacity
             style={
@@ -182,13 +192,15 @@ const LoginScreen = (props) => {
               </Text>
             </View>
           </TouchableOpacity>
+
           {/* Forgotten Password */}
-          <TouchableOpacity onPress={handlePasswordNav}>
+          <TouchableOpacity onPress={handlePasswordNav} style={{ flex: 1 }}>
             <Text style={{ color: Colors.textGrey }}>
               Forget your password?
             </Text>
           </TouchableOpacity>
         </View>
+
         {/* Create Account Text */}
         <TouchableOpacity
           style={styles.createAccountContainer}
@@ -231,16 +243,13 @@ const styles = StyleSheet.create({
     color: Colors.textGrey,
   },
   centeredItems: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   formContainer: {
-    height: '50%',
     width: '80%',
     backgroundColor: Colors.backgroundGrey,
-    marginTop: '10%',
-    marginHorizontal: '5%',
     borderRadius: 25,
     paddingHorizontal: 10,
     paddingVertical: '5%',
@@ -256,10 +265,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginContainer: {
+    height: '40%',
     width: '70%',
-    height: '10%',
     borderRadius: 15,
-    marginTop: 20,
     marginBottom: 10,
     marginHorizontal: '20%',
     justifyContent: 'center',
@@ -270,6 +278,7 @@ const styles = StyleSheet.create({
   },
   loginDisabled: {
     backgroundColor: Colors.popupGrey,
+
     borderWidth: 1,
     borderColor: Colors.darkPurple,
   },
