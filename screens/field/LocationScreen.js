@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Pressable,
   Image,
   TextInput,
@@ -13,6 +12,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
@@ -56,8 +56,12 @@ const LocationScreen = (props) => {
 
   const textInputHandler = () => {
     //need more form validation on GPS blank spaces
-    if (text.trim()) {
-      setCompleted(true);
+    try {
+      if (text.trim()) {
+        setCompleted(true);
+      }
+    } catch (e) {
+      setCompleted(false);
     }
   };
 
@@ -102,73 +106,85 @@ const LocationScreen = (props) => {
   }, [props.navigation]);
 
   return (
-    <View style={styles.screen}>
-      <View style={styles.backgroundCard}>
-        <Text style={styles.title}>Location</Text>
-        <View style={styles.greenCard}>
-          <View style={styles.dashedBoarder}>
-            <Image
-              source={require('../../assets/Bitmap.png')}
-              style={{ width: '100%', height: '100%' }}
-            ></Image>
-          </View>
-          <View style={styles.locationButtonContainer}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.backgroundCard}>
+          <Text style={styles.title}>Location</Text>
+          {/* Input Forms */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <View style={styles.greenCard}>
+              <View style={styles.dashedBoarder}>
+                <Image
+                  source={require('../../assets/Bitmap.png')}
+                  style={styles.map}
+                ></Image>
+              </View>
+              <View style={styles.locationButtonContainer}>
+                <NextButton
+                  buttonName={'Use Current Location'}
+                  enabledStyle={styles.locationEnabled}
+                  disabledStyle={styles.locationDisabled}
+                  textDisabled={{ color: Colors.lightPurple }}
+                  onPress={handleLocation}
+                  isDisabled={!useLocation}
+                />
+              </View>
+              <Text style={styles.ORtext}>---- OR ----</Text>
+              <View style={styles.typeLocationContainer}>
+                {/* <Image source={require('../../assets/Bitmap.png')} /> */}
+                <View style={styles.textBox}>
+                  <TextInput
+                    placeholder='GPS'
+                    placeholderTextColor={Colors.textGrey}
+                    style={{ color: Colors.primaryGreen }}
+                    blurOnSubmit
+                    multiline
+                    keyboardType='default'
+                    autoCapitalize='none'
+                    autoCorrect={true}
+                    onEndEditing={textInputHandler}
+                    onChangeText={(text) => setText(text)}
+                    defaultValue={text}
+                  />
+                </View>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+
+          <View style={styles.bottomCard}>
             <NextButton
-              buttonName={'Use Current Location'}
-              enabledStyle={styles.locationEnabled}
-              disabledStyle={styles.locationDisabled}
-              textDisabled={{ color: Colors.lightPurple }}
-              onPress={handleLocation}
-              isDisabled={!useLocation}
+              onPress={handleNavigation}
+              isDisabled={!isCompleted}
+              nextArrow={true}
             />
           </View>
-          <Text style={styles.ORtext}>---- OR ----</Text>
-          <View style={styles.typeLocationContainer}>
-            {/* <Image source={require('../../assets/Bitmap.png')} /> */}
-            <View style={styles.textBox}>
-              <TextInput
-                placeholder='GPS'
-                placeholderTextColor={Colors.textGrey}
-                style={{ color: Colors.primaryGreen }}
-                blurOnSubmit
-                multiline
-                keyboardType='default'
-                autoCapitalize='none'
-                autoCorrect={true}
-                onEndEditing={textInputHandler}
-                onChangeText={(text) => setText(text)}
-                defaultValue={text}
-              />
+        </View>
+
+        {/* Loading Modal */}
+        {loading && (
+          <Modal transparent={true} style={styles.loadingScreen}>
+            <View style={styles.loadingBackground}>
+              <ActivityIndicator size='large' color={Colors.white} />
             </View>
-          </View>
-        </View>
-
-        <View style={styles.bottomCard}>
-          <NextButton
-            onPress={handleNavigation}
-            isDisabled={!isCompleted}
-            nextArrow={true}
-          />
-        </View>
-      </View>
-
-      {/* Loading Modal */}
-      {loading && (
-        <Modal transparent={true} style={styles.loadingScreen}>
-          <View style={styles.loadingBackground}>
-            <ActivityIndicator size='large' color={Colors.white} />
-          </View>
-        </Modal>
-      )}
-      {/* Information Popup, Broken */}
-      {/* <Popup
-        modalText={
-          'You can click on the titles of each section, such as "Cultivar" for additional information!'
-        }
-        modalVisible={modalVisible}
-        onPress={() => setModalVisible(!modalVisible)}
-      /> */}
-    </View>
+          </Modal>
+        )}
+        {/* Information Popup, Broken */}
+        {/* <Popup
+          modalText={
+            'You can click on the titles of each section, such as "Cultivar" for additional information!'
+          }
+          modalVisible={modalVisible}
+          onPress={() => setModalVisible(!modalVisible)}
+        /> */}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundGrey,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    overflow: 'hidden',
+    overflow: 'visible',
     alignItems: 'center',
   },
   title: {
@@ -225,17 +241,18 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   greenCard: {
+    alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 0,
     marginVertical: 10,
     width: '90%',
-    height: '70%',
+    height: '80%',
     backgroundColor: Colors.primaryGreen,
     borderRadius: 25,
     padding: 20,
   },
   dashedBoarder: {
-    width: '100%',
-    height: '40%',
+    marginTop: 10,
     backgroundColor: 'transparent',
     borderStyle: 'dashed',
     borderWidth: 1,
@@ -243,6 +260,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.white,
     overflow: 'hidden',
   },
+  map: { width: DEVICE_WIDTH / 1.5, height: DEVICE_WIDTH / 3 },
   locationButtonContainer: {
     width: '100%',
   },
@@ -269,8 +287,8 @@ const styles = StyleSheet.create({
   },
   textBox: {
     backgroundColor: Colors.background,
-    width: '80%',
-    height: '45%',
+    width: DEVICE_WIDTH / 1.5,
+    padding: 5,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

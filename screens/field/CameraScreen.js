@@ -44,9 +44,8 @@ const CameraScreen = (props) => {
 
   const dispatch = useDispatch();
 
-  //need to change back to false for deployment
   useEffect(() => {
-    imageRoll[0] != null ? setIsCompleted(true) : setIsCompleted(true);
+    imageRoll[0] != null ? setIsCompleted(true) : setIsCompleted(false);
   }, [imageRoll]);
 
   //getting permission to use Camera
@@ -136,14 +135,17 @@ const CameraScreen = (props) => {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    // No safeAreaView because they camera should take up everything available
+    <View style={styles.screen}>
+      {/* Camera */}
       <View style={styles.cameraContainer}>
         <Camera
           ref={(ref) => setCamera(ref)}
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           type={Camera.Constants.Type.back}
         />
         <View style={styles.controlsContainer}>
+          {/* Image Roll Button */}
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={styles.stackContainer}>
               <Image
@@ -157,10 +159,12 @@ const CameraScreen = (props) => {
               )}
             </View>
           </TouchableOpacity>
+          {/* Camera Button */}
           <TouchableOpacity
             style={styles.cameraButton}
             onPress={handlePicture}
           ></TouchableOpacity>
+          {/* Access users camera roll */}
           <TouchableOpacity
             onPress={() => {
               pickImage();
@@ -238,7 +242,7 @@ const CameraScreen = (props) => {
         modalVisible={modalVisible}
         onPress={() => setModalVisible(!modalVisible)}
       /> */}
-    </SafeAreaView>
+    </View>
   );
 };
 
