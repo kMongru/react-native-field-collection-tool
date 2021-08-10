@@ -19,6 +19,7 @@ import * as mcActions from '../../store/actions/multipleChoice';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Popup from '../../components/Popup';
+import Dots from '../../components/Dots';
 import MultipleChoiceButton from '../../components/MutipleChoiceButton';
 import TextSpeechForm from '../../components/TextSpeechForms/TextSpeechForm';
 import NextButton from '../../components/NextButton';
@@ -252,16 +253,8 @@ export const screenOptions = (navData) => {
   return {
     headerTitle: () => {
       return (
-        //see offical npm docs for all information relationing to Dot props
-        // <Dots
-        //   length={3}
-        //   active={0}
-        //   activeDotHeight={15}
-        //   activeDotWidth={15}
-        //   activeColor={Colors.primaryGreen}
-        //   passiveColor={Colors.backgroundGrey}
-        // />
-        <Text>Dots Placeholder</Text>
+        //activeDot determines active index
+        <Dots activeDot={0} />
       );
     },
     headerTransparent: true,

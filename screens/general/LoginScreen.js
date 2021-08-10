@@ -82,7 +82,7 @@ const LoginScreen = (props) => {
 
   //needs to be async for rest calls to server!
   const handleLogin = async () => {
-    //dispatch a login action to the store to switch to new stack
+    //dispatch a login action to the store to switch to new nav stack
     let action = authActions.login(
       formState.inputValues.email,
       formState.inputValues.password

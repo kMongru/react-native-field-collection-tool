@@ -1,6 +1,5 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Platform, SafeAreaView, Button, View } from 'react-native';
 import Colors from '../constants/Colors';
 
 //importing all screens and screenOptions
@@ -8,6 +7,9 @@ import HomeScreen, {
   screenOptions as homeScreenOptions,
 } from '../screens/field/HomeScreen';
 
+import UserAccountScreen, {
+  screenOption as userAccountScreenOptions,
+} from '../screens/field/UserAccountScreen';
 import ReportIssueScreen, {
   screenOptions as reportIssueScreenOptions,
 } from '../screens/field/ReportIssueScreen';
@@ -41,10 +43,15 @@ const SurveyStackNavigator = createStackNavigator();
 export const SurveyNavigator = () => {
   return (
     <SurveyStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <SurveyStackNavigator.Screen
+      {/* <SurveyStackNavigator.Screen
         name='Home'
         component={HomeScreen}
         options={homeScreenOptions}
+      />
+      <SurveyStackNavigator.Screen
+        name='UserAccount'
+        component={UserAccountScreen}
+        options={userAccountScreenOptions}
       />
       <SurveyStackNavigator.Screen
         name='ReportIssue'
@@ -60,8 +67,8 @@ export const SurveyNavigator = () => {
         name='BarcodeScanning'
         component={BarcodeScanningScreen}
         options={barcodeScanningScreenOptions}
-      />
-      {/*
+      /> */}
+
       <SurveyStackNavigator.Screen
         name='InputForms'
         component={InputFormsScreen}
@@ -71,7 +78,7 @@ export const SurveyNavigator = () => {
         name='Camera'
         component={CameraScreen}
         options={cameraScreenOptions}
-      /> 
+      />
       <SurveyStackNavigator.Screen
         name='Location'
         component={LocationScreen}
@@ -81,7 +88,7 @@ export const SurveyNavigator = () => {
         name='Summary'
         component={SummaryScreen}
         options={summaryScreenOptions}
-      /> */}
+      />
     </SurveyStackNavigator.Navigator>
   );
 };

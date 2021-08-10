@@ -112,11 +112,12 @@ export const login = (email, password) => {
   return { type: AUTHENTICATE, userId: email, token: 'dummyToken' };
 };
 
-// export const logout = () => {
-//   clearLogoutTimer();
-//   AsyncStorage.removeItem('userData');
-//   return { type: LOGOUT };
-// };
+export const logout = () => {
+  console.log('logout called');
+  // clearLogoutTimer();
+  // AsyncStorage.removeItem('userData');
+  return { type: LOGOUT };
+};
 
 // const clearLogoutTimer = () => {
 //   if (timer) {

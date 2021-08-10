@@ -9,6 +9,7 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from 'react-native';
+
 //using AsyncStorage for data persisentence! For the 'do not show again' feature of the modal
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,7 +68,7 @@ const HomeScreen = (props) => {
         </Text>
       </View>
       <View style={styles.scanningButtonContainer}>
-        {/*currenly skipping over the modal */}
+        {/*Scanning Button*/}
         <NextButton
           buttonName={'Start scanning the sample!'}
           onPress={decideNavigation.bind(this, 'BarcodeScanning')}
@@ -76,11 +77,13 @@ const HomeScreen = (props) => {
         />
       </View>
       <View style={styles.bottomButtonContainer}>
+        {/* Report Issue Button */}
         <TouchableOpacity onPress={handleNavigation.bind(this, 'ReportIssue')}>
           <View style={styles.bottomButton}>
             <Text style={{ color: Colors.lightRed }}>Report Issue</Text>
           </View>
         </TouchableOpacity>
+        {/* Shipping Information Button */}
         <TouchableOpacity
           onPress={handleNavigation.bind(this, 'ShippingInformation')}
         >

@@ -19,6 +19,7 @@ import * as surveyActions from '../../store/actions/survey';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 
+import Dots from '../../components/Dots';
 import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
@@ -250,16 +251,8 @@ export const screenOptions = (navData) => {
   return {
     headerTitle: () => {
       return (
-        //see offical npm docs for all information relationing to Dot props
-        // <Dots
-        //   length={3}
-        //   active={1}
-        //   activeDotHeight={15}
-        //   activeDotWidth={15}
-        //   activeColor={Colors.primaryGreen}
-        //   passiveColor={Colors.backgroundGrey}
-        // />
-        <Text>Dots Placeholder</Text>
+        //activeDot determines active index
+        <Dots activeDot={1} />
       );
     },
     headerTransparent: true,
