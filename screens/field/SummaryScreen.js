@@ -36,7 +36,7 @@ const SummaryScreen = (props) => {
   const testState = useSelector((state) => state.survey);
 
   //userId
-  const userID = useSelector((state) => state.auth.userID);
+  const userID = useSelector((state) => state.auth.userId);
 
   const handleSubmission = () => {
     //right here will dipatched final database call

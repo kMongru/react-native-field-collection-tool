@@ -11,16 +11,15 @@ const AppNavigator = (props) => {
   // const didTryAutoLogin = useSelector((state) => state.auth.didTryAutoLogin);
 
   //wrapping all the navigators
-
   //   {isAuth && <ShopNavigator />}
   //   {!isAuth && didTryAutoLogin && <AuthNavigator />}
   //   {!isAuth && !didTryAutoLogin && <StartupScreen />}
 
   return (
     <NavigationContainer>
-      <SurveyNavigator />
-      {/* {isAuth && <SurveyNavigator />}
-      {!isAuth && <AuthNavigator />} */}
+      {/* <SurveyNavigator /> */}
+      {isAuth && <SurveyNavigator />}
+      {!isAuth && <AuthNavigator />}
     </NavigationContainer>
   );
 };

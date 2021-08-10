@@ -148,6 +148,7 @@ const LoginScreen = (props) => {
               errorText='Please enter a valid email address.'
               onInputChange={inputChangeHandler}
               initialValue=''
+              color={Colors.white}
             />
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <AuthInput
@@ -161,6 +162,7 @@ const LoginScreen = (props) => {
                 errorText='Please enter a valid password.'
                 onInputChange={inputChangeHandler}
                 initialValue=''
+                color={Colors.white}
               />
               <TouchableOpacity onPress={changeIcon}>
                 <Ionicons name={eye} size={30} color={Colors.textGrey} />

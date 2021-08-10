@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 30,
-    backgroundColor: 'red',
   },
   title: {
     fontSize: 24,

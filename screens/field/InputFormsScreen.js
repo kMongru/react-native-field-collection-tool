@@ -105,7 +105,6 @@ const InputFormsScreen = (props) => {
   //getting values (text or uri) from children textSpeechForm component
   const handleInputForm = useCallback(
     (inputIndentifier, inputValue, inputValidity) => {
-      console.log(inputIndentifier + '/' + inputValue + '/' + inputValidity);
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
         input: inputIndentifier,
@@ -156,13 +155,6 @@ const InputFormsScreen = (props) => {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.backgroundCard}>
-        {/* <KeyboardAvoidingView
-          style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
-          behavior='position' //need to change for andriod
-          enabled
-          keyboardVerticalOffset={100}
-        >
-          <ScrollView> */}
         <KeyboardAwareScrollView style={{ flex: 1 }}>
           {/* Multiple Choice Buttons */}
           <View style={styles.mutipleChoiceContainer}>

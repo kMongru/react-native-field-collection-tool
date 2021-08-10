@@ -8,7 +8,7 @@ import HomeScreen, {
 } from '../screens/field/HomeScreen';
 
 import UserAccountScreen, {
-  screenOption as userAccountScreenOptions,
+  screenOptions as userAccountScreenOptions,
 } from '../screens/field/UserAccountScreen';
 import ReportIssueScreen, {
   screenOptions as reportIssueScreenOptions,
@@ -43,7 +43,7 @@ const SurveyStackNavigator = createStackNavigator();
 export const SurveyNavigator = () => {
   return (
     <SurveyStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      {/* <SurveyStackNavigator.Screen
+      <SurveyStackNavigator.Screen
         name='Home'
         component={HomeScreen}
         options={homeScreenOptions}
@@ -67,8 +67,7 @@ export const SurveyNavigator = () => {
         name='BarcodeScanning'
         component={BarcodeScanningScreen}
         options={barcodeScanningScreenOptions}
-      /> */}
-
+      />
       <SurveyStackNavigator.Screen
         name='InputForms'
         component={InputFormsScreen}

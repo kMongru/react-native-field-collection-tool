@@ -163,6 +163,7 @@ const CreateAccountScreen = (props) => {
                   errorText='Please enter a valid email address.'
                   onInputChange={inputChangeHandler}
                   initialValue=''
+                  color={Colors.white}
                 />
               </View>
               <View style={styles.inputLineContainer}>
@@ -178,6 +179,7 @@ const CreateAccountScreen = (props) => {
                   errorText='Password must be longer then 5 characters.'
                   onInputChange={inputChangeHandler}
                   initialValue=''
+                  color={Colors.white}
                 />
               </View>
               <View style={styles.inputLineContainer}>
@@ -289,6 +291,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderBottomColor: Colors.primaryGreen,
     borderBottomWidth: 1,
+    color: Colors.white,
   },
   loginContainer: {
     width: '70%',
