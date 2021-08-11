@@ -7,6 +7,7 @@ notes:
 - location text entry needs seperation logic
 - need to scale images on summary in accordance with screen size
 - redesign the information popup
+- change crop name in summary, refer to state object naming
 
 //Next Steps
 
