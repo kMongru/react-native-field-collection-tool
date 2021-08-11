@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView } from 'react-native';
 import Colors from '../../constants/Colors';
 
 /*
@@ -9,7 +9,7 @@ import Colors from '../../constants/Colors';
 
 const ShippingInformationScreen = (props) => {
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <Text style={styles.title}>Shipping Procedure</Text>
       <ScrollView>
         <View style={styles.cardContainer}>
@@ -34,7 +34,7 @@ const ShippingInformationScreen = (props) => {
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

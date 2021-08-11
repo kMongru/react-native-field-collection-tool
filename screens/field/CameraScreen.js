@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Image,
   Pressable,
@@ -65,14 +64,14 @@ const CameraScreen = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <Pressable
+        <TouchableOpacity
           onPress={() => setInformationModalVisible(!informationModalVisible)}
         >
           <Image
             source={require('../../assets/info.png')}
             style={styles.informationLogo}
           />
-        </Pressable>
+        </TouchableOpacity>
       ),
     });
   }, [props.navigation]);
@@ -235,14 +234,14 @@ const CameraScreen = (props) => {
           </View>
         </SafeAreaView>
       </Modal>
-      {/* Information Popup broken */}
-      {/* <Popup
-        modalText={
-          'You can click on the titles of each section, such as "Cultivar" for additional information!'
-        }
-        modalVisible={modalVisible}
-        onPress={() => setModalVisible(!modalVisible)}
-      /> */}
+      {/* Information Popup */}
+      <View style={{ width: 0, height: 0 }}>
+        <Popup
+          modalText={'You can upload or take up to 3 pictures!'}
+          modalVisible={informationModalVisible}
+          onPress={() => setInformationModalVisible(!informationModalVisible)}
+        />
+      </View>
     </View>
   );
 };
@@ -257,6 +256,7 @@ export const screenOptions = (navData) => {
     },
     headerTransparent: true,
     headerTintColor: Colors.white,
+    headerBackTitle: 'Back',
   };
 };
 

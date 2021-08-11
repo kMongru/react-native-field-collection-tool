@@ -196,7 +196,7 @@ const InputFormsScreen = (props) => {
               style={styles.sectionTitles}
               placeHolderText={'A breif description of control methods...'}
               modalText={
-                'Please include pesticides used and duration used in the previous _ years'
+                'Please include pesticides used and duration in the previous _ years'
               }
               handleInputForm={handleInputForm}
             />
@@ -251,6 +251,7 @@ export const screenOptions = (navData) => {
     },
     headerTransparent: true,
     headerTintColor: Colors.textGrey,
+    headerBackTitle: 'Back',
   };
 };
 

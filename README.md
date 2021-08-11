@@ -4,11 +4,9 @@ Research Survey Tool for Western University Researchers
 
 notes:
 
-- text inputs need to adjust and implement proper keyboard avoiding view
-- need to fix header popup, pushing objects
+- location text entry needs seperation logic
 - need to scale images on summary in accordance with screen size
 - redesign the information popup
-- learn how to save the temp files
 
 //Next Steps
 

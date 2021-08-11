@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   Image,
   TextInput,
   Modal,
@@ -13,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 //use selector in the textForm??
 import { useSelector, useDispatch } from 'react-redux';
@@ -25,6 +25,10 @@ import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH, DEVICE_HEIGHT } from '../../constants/Screen';
 
+/* 
+  Text handing needs logic to seperate the string into long and lat
+*/
+
 const LocationScreen = (props) => {
   //set to false, prototyping is true for now
   const [isCompleted, setCompleted] = useState(false);
@@ -34,6 +38,7 @@ const LocationScreen = (props) => {
   //from expo docs, location.coords.latitude and location.coords.longitude
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+
   //for the text input
   const [text, setText] = useState(null);
 
@@ -41,7 +46,7 @@ const LocationScreen = (props) => {
   const [loading, setLoading] = useState(false);
 
   //information header button
-  const [modalVisible, setModalVisible] = useState(false);
+  const [informationModalVisible, setInformationModalVisible] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -96,12 +101,14 @@ const LocationScreen = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+        <TouchableOpacity
+          onPress={() => setInformationModalVisible(!informationModalVisible)}
+        >
           <Image
             source={require('../../assets/info.png')}
             style={styles.informationLogo}
           />
-        </Pressable>
+        </TouchableOpacity>
       ),
     });
   }, [props.navigation]);
@@ -114,7 +121,9 @@ const LocationScreen = (props) => {
           {/* Input Forms */}
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+            keyboardVerticalOffset={10}
             style={{
+              flex: 4.5,
               width: '100%',
               alignItems: 'center',
               justifyContent: 'center',
@@ -139,10 +148,9 @@ const LocationScreen = (props) => {
               </View>
               <Text style={styles.ORtext}>---- OR ----</Text>
               <View style={styles.typeLocationContainer}>
-                {/* <Image source={require('../../assets/Bitmap.png')} /> */}
                 <View style={styles.textBox}>
                   <TextInput
-                    placeholder='GPS'
+                    placeholder='Enter longitude, latitude...'
                     placeholderTextColor={Colors.textGrey}
                     style={{ color: Colors.primaryGreen }}
                     blurOnSubmit
@@ -176,14 +184,16 @@ const LocationScreen = (props) => {
             </View>
           </Modal>
         )}
-        {/* Information Popup, Broken */}
-        {/* <Popup
-          modalText={
-            'You can click on the titles of each section, such as "Cultivar" for additional information!'
-          }
-          modalVisible={modalVisible}
-          onPress={() => setModalVisible(!modalVisible)}
-        /> */}
+        {/* Information Popup */}
+        <View style={{ width: 0, height: 0 }}>
+          <Popup
+            modalText={
+              'Please stand as close as possible to the collection site when using current location'
+            }
+            modalVisible={informationModalVisible}
+            onPress={() => setInformationModalVisible(!informationModalVisible)}
+          />
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -199,6 +209,7 @@ export const screenOptions = (navData) => {
     },
     headerTransparent: true,
     headerTintColor: Colors.textGrey,
+    headerBackTitle: 'Back',
   };
 };
 
@@ -239,7 +250,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     marginVertical: 10,
     width: '90%',
-    height: '80%',
+    height: '90%',
     backgroundColor: Colors.primaryGreen,
     borderRadius: 25,
     padding: 20,
@@ -268,11 +279,10 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     color: Colors.white,
-    marginVertical: 5,
     fontWeight: 'bold',
   },
   typeLocationContainer: {
-    marginTop: 20,
+    marginTop: 10,
     width: '100%',
     height: '20%',
     justifyContent: 'center',
@@ -287,12 +297,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomCard: {
+    flex: 1,
     backgroundColor: Colors.background,
     width: DEVICE_WIDTH,
     height: '20%',
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    paddingTop: 10,
   },
   loadingScreen: {
     flex: 1,

@@ -10,8 +10,13 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  SafeAreaView,
 } from 'react-native';
+
 import Colors from '../../constants/Colors';
+import { DEVICE_WIDTH } from '../../constants/Screen';
+
+import Popup from '../../components/Popup';
 
 /*
   Reported issues will be stored in the database for history,
@@ -27,63 +32,87 @@ const ReportIssueScreen = (props) => {
     //need more form validation on blank spaces
     if (text.trim()) {
       setConfirmed(true);
-      console.log(confirmed);
     } else {
       setConfirmed(false);
-      console.log(confirmed);
     }
   };
 
   const handleSubmission = () => {
     //connect to database and make row input
+    if (confirmed) {
+      console.log('submitted!');
+      //reset text input
+      setText('');
+      //show confirmation modal
+      setModalVisible(true);
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.screen}
-    >
-      <View style={styles.imageContainer}>
-        <Image
-          style={{ width: 250, height: 250 }}
-          source={require('../../assets/warning.png')}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.boldText}>
-          We’re sorry you’re experiencing an issue
-        </Text>
-        <Text style={styles.bodyText}>
-          Thank you for taking the time to report the problem.
-        </Text>
-      </View>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputTextBox}>
-          <TextInput
-            placeholder={'Enter your issue here...'}
-            placeholderTextColor={Colors.textGrey}
-            blurOnSubmit
-            multiline={true}
-            keyboardType='default'
-            autoCapitalize='none'
-            autoCorrect={true}
-            onEndEditing={textInputHandler}
-            onChangeText={(text) => setText(text)}
-            defaultValue={text}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.screen}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{
+            flex: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '15%',
+          }}
+        >
+          {/* Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              style={{ width: DEVICE_WIDTH / 2, height: DEVICE_WIDTH / 2 }}
+              source={require('../../assets/warning.png')}
+            />
+          </View>
+          {/* Header Text */}
+          <View style={styles.textContainer}>
+            <Text style={styles.boldText}>
+              We’re sorry you’re experiencing an issue
+            </Text>
+            <Text style={styles.bodyText}>
+              Thank you for taking the time to report the problem.
+            </Text>
+          </View>
+          {/* Input Form */}
+          <View style={styles.inputTextBox}>
+            <TextInput
+              placeholder={'Enter your issue here...'}
+              placeholderTextColor={Colors.textGrey}
+              blurOnSubmit
+              multiline
+              keyboardType='default'
+              autoCapitalize='none'
+              autoCorrect={true}
+              onEndEditing={textInputHandler}
+              onChangeText={(text) => setText(text)}
+              defaultValue={text}
+              style={{ color: Colors.white }}
+            />
+          </View>
+        </KeyboardAvoidingView>
+        {/* Submit Button */}
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmission}
+          >
+            <Text style={{ color: Colors.white, fontWeight: '600' }}>
+              Submit Issue
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={handleSubmission}
-      >
-        <View style={styles.submitButton}>
-          <Text style={{ color: Colors.white, fontWeight: '600' }}>
-            Submit Issue
-          </Text>
-        </View>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -102,15 +131,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 2,
-    marginTop: '5%',
     width: '100%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    marginBottom: '5%',
   },
   textContainer: {
-    width: '100%',
-    padding: '2%',
-    marginBottom: '10%',
+    flex: 1,
   },
   boldText: {
     fontSize: 18,
@@ -123,33 +148,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.textGrey,
   },
-  inputContainer: {
-    padding: '1%',
-    width: '100%',
-    height: '15%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
   inputTextBox: {
-    width: '80%',
-    height: '100%',
+    flex: 1,
+    minWidth: '80%',
+    maxWidth: '80%',
+    minHeight: '3%',
     backgroundColor: Colors.backgroundGrey,
+    marginBottom: '10%',
     borderColor: Colors.lightRed,
     borderWidth: 1,
-    borderRadius: 25,
-    padding: 10,
-  },
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: '5%',
+    borderRadius: 10,
+    padding: '1%',
   },
   submitButton: {
     backgroundColor: Colors.lightRed,
     width: '60%',
-    height: '40%',
+    height: '30%',
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',

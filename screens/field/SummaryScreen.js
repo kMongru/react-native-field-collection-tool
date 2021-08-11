@@ -3,10 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   ScrollView,
   Image,
-  Pressable,
+  TouchableOpacity,
   Modal,
   SafeAreaView,
 } from 'react-native';
@@ -65,20 +64,20 @@ const SummaryScreen = (props) => {
   useEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <Pressable
+        <TouchableOpacity
           onPress={() => setInformationModalVisible(!informationModalVisible)}
         >
           <Image
             source={require('../../assets/info.png')}
             style={styles.informationLogo}
           />
-        </Pressable>
+        </TouchableOpacity>
       ),
     });
   }, [props.navigation]);
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       {/* Images */}
       <View style={styles.imageRollContainer}>
         <ScrollView horizontal={true}>
@@ -193,14 +192,14 @@ const SummaryScreen = (props) => {
         </View>
       </Modal>
       {/* Information Popup broken*/}
-      {/* <Popup
-        modalText={
-          'You can click on the titles of each section, such as "Cultivar" for additional information!'
-        }
-        modalVisible={modalVisible}
-        onPress={() => setModalVisible(!modalVisible)}
-      /> */}
-    </View>
+      <View style={{ width: 0, height: 0 }}>
+        <Popup
+          modalText={'You can scroll through each text section!'}
+          modalVisible={informationModalVisible}
+          onPress={() => setInformationModalVisible(!informationModalVisible)}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -214,6 +213,7 @@ export const screenOptions = (navData) => {
     },
     headerTransparent: true,
     headerTintColor: Colors.textGrey,
+    headerBackTitle: 'Back',
   };
 };
 
