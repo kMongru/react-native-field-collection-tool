@@ -18,6 +18,10 @@ import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Screen';
 import NextButton from '../../components/NextButton';
 
+/* 
+need the do not show again to trigger navigation
+*/
+
 const HomeScreen = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -204,7 +208,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
-    backgroundColor: 'red',
   },
   modalView: {
     margin: 20,

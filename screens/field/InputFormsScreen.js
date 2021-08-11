@@ -230,13 +230,15 @@ const InputFormsScreen = (props) => {
         </View>
       </View>
       {/* Information Popup */}
-      <Popup
-        modalText={
-          'You can click on the titles of each section, such as "Cultivar" for additional information!'
-        }
-        modalVisible={modalVisible}
-        onPress={() => setModalVisible(!modalVisible)}
-      />
+      <View style={{ width: 0, height: 0 }}>
+        <Popup
+          modalText={
+            'You can click on the titles of each section, such as "Cultivar" for additional information!'
+          }
+          modalVisible={modalVisible}
+          onPress={() => setModalVisible(!modalVisible)}
+        />
+      </View>
     </SafeAreaView>
   );
 };

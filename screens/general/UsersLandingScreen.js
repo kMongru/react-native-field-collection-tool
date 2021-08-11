@@ -34,7 +34,7 @@ const UsersLandingScreen = (props) => {
           {/* Go Button */}
           <View style={styles.outerCircle}>
             <View style={styles.innerCircle}>
-              <Text style={styles.goText}>go</Text>
+              <Text style={styles.goText}>Go</Text>
             </View>
           </View>
         </View>
@@ -62,7 +62,7 @@ const UsersLandingScreen = (props) => {
           {/* Go Button */}
           <View style={{ ...styles.outerCircle, backgroundColor: '#D3B1FD' }}>
             <View style={styles.innerCircle}>
-              <Text style={styles.goText}>go</Text>
+              <Text style={styles.goText}>Go</Text>
             </View>
           </View>
         </View>
