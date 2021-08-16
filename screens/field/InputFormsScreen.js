@@ -26,9 +26,7 @@ import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 
-const MULTIPLE_CHOICE_SELECTION = 'MULTIPLE_CHOICE_SELECTION';
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const inputFormReducer = (state, action) => {
@@ -97,7 +95,6 @@ const InputFormsScreen = (props) => {
       cultivar: false,
       controlMethods: false,
       hotspotDescription: false,
-      otherNotes: false,
     },
     formIsValid: false,
   });
@@ -110,6 +107,18 @@ const InputFormsScreen = (props) => {
         input: inputIndentifier,
         value: inputValue,
         isValid: inputValidity,
+      });
+    },
+    [dispatchFormState]
+  );
+
+  const handleOptionalForm = useCallback(
+    (inputIndentifier, inputValue) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        input: inputIndentifier,
+        value: inputValue,
+        isValid: true,
       });
     },
     [dispatchFormState]
@@ -214,7 +223,7 @@ const InputFormsScreen = (props) => {
               style={styles.sectionTitles}
               placeHolderText={'Other notes you wish to include (optional)...'}
               modalText={'This may include...'}
-              handleInputForm={handleInputForm}
+              handleInputForm={handleOptionalForm}
             />
           </View>
         </KeyboardAwareScrollView>

@@ -4,10 +4,9 @@ Research Survey Tool for Western University Researchers
 
 notes:
 
-- location text entry needs seperation logic
-- need to scale images on summary in accordance with screen size
 - redesign the information popup
-- change crop name in summary, refer to state object naming
+- edit users account screen
+- shipping precedure screen
 
 //Next Steps
 
@@ -15,6 +14,7 @@ notes:
 - add lab side features
 - implement auth into backend, need to save more values about user profiles (orginization, name)
 - implement ReportIssueScreen, BarcodeScanningScreen, SummaryScreen into backend
+- audio to text feature, make it editable in the summary page
 
 //Final Deployment
 

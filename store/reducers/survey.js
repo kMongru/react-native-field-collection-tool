@@ -7,7 +7,7 @@ const initialState = {
   },
   barcode: '',
   crop: '',
-  cultivar: '',
+  cultivar: 'This a test value',
   controlMethods: '',
   hotspotDecription: '',
   otherNotes: '',

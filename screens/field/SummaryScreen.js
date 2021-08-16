@@ -6,8 +6,10 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  TextInput,
   Modal,
   SafeAreaView,
+  Button,
 } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,19 +26,33 @@ import { DEVICE_WIDTH } from '../../constants/Screen';
 */
 
 const SummaryScreen = (props) => {
+  //submission modal
   const [modalVisible, setModalVisible] = useState(false);
-
   //information header button
   const [informationModalVisible, setInformationModalVisible] = useState(false);
+  //ediiting modal
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [value, setValue] = useState(false);
 
   const dispatch = useDispatch();
 
   //simple test state
-  const testState = useSelector((state) => state.survey);
+  const initialSurveyState = useSelector((state) => state.survey);
+
+  //setting up editable textinputs
+  const [cultivarText, setCultivarText] = useState(initialSurveyState.cultivar);
 
   //userId
   const userID = useSelector((state) => state.auth.userId);
 
+  //controls the modal to edit information
+  const handleEditing = (indentifer, initalValue) => {
+    setEditModalVisible(true);
+
+    console.log(editModalVisible);
+  };
+
+  //navigation and submission functions
   const handleSubmission = () => {
     //right here will dipatched final database call
     let dateAndTime = new Date().toLocaleString();
@@ -81,7 +97,7 @@ const SummaryScreen = (props) => {
       {/* Images */}
       <View style={styles.imageRollContainer}>
         <ScrollView horizontal={true}>
-          {testState.images.map((imageUri, index) => {
+          {initialSurveyState.images.map((imageUri, index) => {
             return (
               <View
                 key={index}
@@ -105,35 +121,52 @@ const SummaryScreen = (props) => {
           style={styles.locationIMG}
         />
         <Text style={styles.locationText}>
-          {testState.latitude},{testState.longitude}
+          {initialSurveyState.latitude},{initialSurveyState.longitude}
         </Text>
       </View>
       {/* Crop */}
       <View style={styles.cropContainer}>
-        <Text style={styles.cropText}>{testState.crop}</Text>
+        <Text style={styles.cropText}>{initialSurveyState.crop}</Text>
       </View>
       {/* Summary Cards */}
-      <ScrollView
-        horizontal={true}
-        style={{ marginHorizontal: DEVICE_WIDTH * 0.08 }}
-      >
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardHeader}>Cultivar</Text>
-          <Text style={styles.cardBody}>{testState.cultivar}</Text>
-        </View>
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardHeader}>Control Explaination</Text>
-          <Text style={styles.cardBody}>{testState.controlMethods}</Text>
-        </View>
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardHeader}>Hotspot Description</Text>
-          <Text style={styles.cardBody}>{testState.hotspotDecription}</Text>
-        </View>
-        <View style={styles.cardContainer}>
-          <Text style={styles.cardHeader}>Other Notes</Text>
-          <Text style={styles.cardBody}>{testState.otherNotes}</Text>
-        </View>
-      </ScrollView>
+      {!editModalVisible && (
+        <ScrollView
+          horizontal={true}
+          style={{ marginHorizontal: DEVICE_WIDTH * 0.08 }}
+        >
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardHeader}>Cultivar/Variety</Text>
+            <View style={{ flex: 3 }}>
+              <Text>{cultivarText}</Text>
+            </View>
+            <View style={styles.rightAlignContainer}>
+              <TouchableOpacity
+                onPress={handleEditing}
+                style={styles.editButton}
+              >
+                <Text style={styles.textStyle}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardHeader}>Control Explaination</Text>
+            <Text style={styles.cardBody}>
+              {initialSurveyState.controlMethods}
+            </Text>
+          </View>
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardHeader}>Hotspot Description</Text>
+            <Text style={styles.cardBody}>
+              {initialSurveyState.hotspotDecription}
+            </Text>
+          </View>
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardHeader}>Other Notes</Text>
+            <Text style={styles.cardBody}>{initialSurveyState.otherNotes}</Text>
+          </View>
+        </ScrollView>
+      )}
+
       {/* Submit Button */}
       <View style={{ width: '100%' }}>
         <NextButton
@@ -158,7 +191,6 @@ const SummaryScreen = (props) => {
             <View
               style={{
                 width: 300,
-
                 alignItems: 'center',
               }}
             >
@@ -191,7 +223,7 @@ const SummaryScreen = (props) => {
           </View>
         </View>
       </Modal>
-      {/* Information Popup broken*/}
+      {/* Information Popup */}
       <View style={{ width: 0, height: 0 }}>
         <Popup
           modalText={'You can scroll through each text section!'}
@@ -199,6 +231,42 @@ const SummaryScreen = (props) => {
           onPress={() => setInformationModalVisible(!informationModalVisible)}
         />
       </View>
+      {/* Editing Modal */}
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => setEditModalVisible(!editModalVisible)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={{ flex: 3, backgroundColor: 'blue' }}>
+              <View>
+                <Text>Title</Text>
+              </View>
+              <TextInput
+                style={{
+                  width: DEVICE_WIDTH / 1.5,
+                  backgroundColor: 'red',
+                }}
+                multiline
+                // change these to be dynamic
+                onChangeText={setCultivarText}
+                value={cultivarText}
+              />
+            </View>
+            {/* Save Button */}
+            <View style={styles.rightAlignContainer}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => setEditModalVisible(!editModalVisible)}
+              >
+                <Text>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -240,7 +308,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundGrey,
     borderRadius: 5,
   },
-  images: { width: 200, height: 200 },
+  images: { width: DEVICE_WIDTH / 2, height: DEVICE_WIDTH / 2 },
   locationContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -293,6 +361,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: Colors.popupGrey,
+    marginVertical: '40%',
     marginHorizontal: '20%',
     borderRadius: 20,
     padding: 10,
@@ -313,6 +382,29 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#2196F3',
+  },
+  rightAlignContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  editButton: {
+    marginHorizontal: '5%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    width: '30%',
+    height: '100%',
+    backgroundColor: Colors.primaryGreen,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 2,
   },
   textStyle: {
     color: 'white',

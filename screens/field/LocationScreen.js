@@ -36,7 +36,8 @@ const LocationScreen = (props) => {
   const [useLocation, setUseLocation] = useState(false);
 
   //from expo docs, location.coords.latitude and location.coords.longitude
-  const [location, setLocation] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
   //for the text input
@@ -61,9 +62,13 @@ const LocationScreen = (props) => {
   }, []);
 
   const textInputHandler = () => {
-    //need more form validation on GPS blank spaces
     try {
       if (text.trim()) {
+        //split the string by the commas and cut whitespaces
+        let locationArray = text.split(',[ ]*');
+        //setting the location
+        setLatitude(locationArray[0]);
+        setLongitude(locationArray[1]);
         setCompleted(true);
       }
     } catch (e) {
@@ -77,7 +82,8 @@ const LocationScreen = (props) => {
       setLoading(true);
       let location = await Location.getCurrentPositionAsync({});
       setLoading(false);
-      setLocation(location);
+      setLatitude(location.coords.latitude.toString());
+      setLongitude(location.coords.longitude.toString());
       setUseLocation(true);
       setCompleted(true);
     } else {
@@ -89,8 +95,8 @@ const LocationScreen = (props) => {
     if (isCompleted) {
       dispatch(
         surveyActions.addInformation({
-          latitude: location.coords.latitude.toString(),
-          longitude: location.coords.longitude.toString(),
+          latitude: latitude,
+          longitude: longitude,
         })
       );
       props.navigation.navigate('Summary');
@@ -150,7 +156,7 @@ const LocationScreen = (props) => {
               <View style={styles.typeLocationContainer}>
                 <View style={styles.textBox}>
                   <TextInput
-                    placeholder='Enter longitude, latitude...'
+                    placeholder='Enter latitude, longitude...'
                     placeholderTextColor={Colors.textGrey}
                     style={{ color: Colors.primaryGreen }}
                     blurOnSubmit
