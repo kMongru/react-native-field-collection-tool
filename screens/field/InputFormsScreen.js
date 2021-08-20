@@ -10,6 +10,7 @@ import {
   Pressable,
   Image,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 
 //use selector in the textForm??
@@ -70,8 +71,8 @@ const InputFormsScreen = (props) => {
   //to dipatch actions to the store
   const dispatch = useDispatch();
 
-  //presetting the information for persisentence, use the proper survey identifier, in combine reducer
-  const presetState = useSelector((state) => state.survey.crop);
+  //presetting the information for usePrevious button
+  const presetState = useSelector((state) => state.survey);
 
   const multipleChoiceState = useSelector((state) => state.mc);
 
@@ -124,6 +125,14 @@ const InputFormsScreen = (props) => {
     [dispatchFormState]
   );
 
+  const fillRetainedInformation = (identifier) => {
+    if (presetState.cultivar != '') {
+      //setting the value prop of the input fields to an inital values
+      return presetState[identifier];
+    }
+    return '';
+  };
+
   //determining if the entire screen is completed
   useEffect(() => {
     multipleChoiceState.formIsValid && inputFormState.formIsValid
@@ -167,7 +176,13 @@ const InputFormsScreen = (props) => {
         <KeyboardAwareScrollView style={{ flex: 1 }}>
           {/* Multiple Choice Buttons */}
           <View style={styles.mutipleChoiceContainer}>
-            <Text style={styles.sectionTitles}>Crops</Text>
+            <View style={styles.horizontalAlignment}>
+              <Text style={styles.sectionTitles}>Crops</Text>
+              {/* Use Previous Button */}
+              <TouchableOpacity onPress={fillRetainedInformation}>
+                <Text>Use Previous</Text>
+              </TouchableOpacity>
+            </View>
             <MultipleChoiceButton
               id={'soybeans'}
               title={'Soybeans'}
@@ -198,6 +213,7 @@ const InputFormsScreen = (props) => {
               placeHolderText={'A breif description of the cultivar...'}
               modalText={'Can be a simple one line identification!'}
               handleInputForm={handleInputForm}
+              value={fillRetainedInformation}
             />
             <TextSpeechForm
               id={'controlMethods'}

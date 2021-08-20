@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
   View,
   Text,
@@ -6,10 +6,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  TextInput,
   Modal,
   SafeAreaView,
-  Button,
 } from 'react-native';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,48 +15,117 @@ import * as surveyActions from '../../store/actions/survey';
 
 import Popup from '../../components/Popup';
 import NextButton from '../../components/NextButton';
+import EditModal from '../../components/EditModal';
+
 import Colors from '../../constants/Colors';
 import { DEVICE_WIDTH } from '../../constants/Screen';
+import { useCallback } from 'react';
 
 /*
-  how to save the final images?
   then push the changes as a row entry to the database
 */
+
+const EDIT_INFORMATION = 'EDIT_INFORMATION';
+const SAVE_INFORMATION = 'SAVE_INFORMATION';
+
+const textCardReducer = (state, action) => {
+  switch (action.type) {
+    case EDIT_INFORMATION:
+      const updatedEditableValues = {
+        header: action.header,
+        text: action.text,
+      };
+
+      return {
+        ...state,
+        editModal: updatedEditableValues,
+      };
+
+    case SAVE_INFORMATION:
+      const updatedValues = {
+        ...state.summaryValues,
+        [action.input]: action.value,
+      };
+
+      return {
+        ...state,
+        summaryValues: updatedValues,
+      };
+  }
+};
 
 const SummaryScreen = (props) => {
   //submission modal
   const [modalVisible, setModalVisible] = useState(false);
+
   //information header button
   const [informationModalVisible, setInformationModalVisible] = useState(false);
+
   //ediiting modal
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [value, setValue] = useState(false);
 
   const dispatch = useDispatch();
 
-  //simple test state
+  //inital survey state
   const initialSurveyState = useSelector((state) => state.survey);
 
-  //setting up editable textinputs
-  const [cultivarText, setCultivarText] = useState(initialSurveyState.cultivar);
+  //inital state of summary text redux store
+  const [textCardState, dispatchCardState] = useReducer(textCardReducer, {
+    editModal: {
+      header: '',
+      text: '',
+    },
+    summaryValues: {
+      cultivar: initialSurveyState.cultivar,
+      controlMethods: initialSurveyState.controlMethods,
+      hotspotDescription: initialSurveyState.hotspotDescription,
+      otherNotes: initialSurveyState.otherNotes,
+    },
+  });
 
   //userId
   const userID = useSelector((state) => state.auth.userId);
 
   //controls the modal to edit information
-  const handleEditing = (indentifer, initalValue) => {
+  const handleOpenningEditting = (indentifer) => {
+    console.log(textCardState.summaryValues[indentifer]);
+    dispatchCardState({
+      type: EDIT_INFORMATION,
+      header: indentifer,
+      text: textCardState.summaryValues[indentifer],
+    });
     setEditModalVisible(true);
-
-    console.log(editModalVisible);
   };
+
+  //saves the edited information from the edit
+  const handleSaving = useCallback(
+    (inputValue) => {
+      console.log(inputValue);
+      dispatchCardState({
+        type: SAVE_INFORMATION,
+        input: textCardState.editModal.header,
+        value: inputValue,
+      });
+    },
+    [dispatchCardState]
+  );
 
   //navigation and submission functions
   const handleSubmission = () => {
     //right here will dipatched final database call
+    //JSON.stringify the state managed object
     let dateAndTime = new Date().toLocaleString();
     dispatch(
-      surveyActions.addInformation({ user: userID, dateAndTime: dateAndTime })
+      surveyActions.addInformation({
+        user: userID,
+        dateAndTime: dateAndTime,
+        cultivar: textCardState.summaryValues.cultivar,
+        controlMethods: textCardState.summaryValues.controlMethods,
+        hotspotDescription: textCardState.summaryValues.hotspotDescription,
+        otherNotes: textCardState.summaryValues.otherNotes,
+      })
     );
+    //use the selector here to get final state object?
     setModalVisible(true);
   };
 
@@ -137,11 +204,13 @@ const SummaryScreen = (props) => {
           <View style={styles.cardContainer}>
             <Text style={styles.cardHeader}>Cultivar/Variety</Text>
             <View style={{ flex: 3 }}>
-              <Text>{cultivarText}</Text>
+              <Text>{textCardState.summaryValues.cultivar}</Text>
             </View>
             <View style={styles.rightAlignContainer}>
               <TouchableOpacity
-                onPress={handleEditing}
+                onPress={() => {
+                  handleOpenningEditting('cultivar');
+                }}
                 style={styles.editButton}
               >
                 <Text style={styles.textStyle}>Edit</Text>
@@ -150,19 +219,51 @@ const SummaryScreen = (props) => {
           </View>
           <View style={styles.cardContainer}>
             <Text style={styles.cardHeader}>Control Explaination</Text>
-            <Text style={styles.cardBody}>
-              {initialSurveyState.controlMethods}
-            </Text>
+            <View style={{ flex: 3 }}>
+              <Text>{textCardState.summaryValues.controlMethods}</Text>
+            </View>
+            <View style={styles.rightAlignContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleOpenningEditting('controlMethods');
+                }}
+                style={styles.editButton}
+              >
+                <Text style={styles.textStyle}>Edit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.cardContainer}>
             <Text style={styles.cardHeader}>Hotspot Description</Text>
-            <Text style={styles.cardBody}>
-              {initialSurveyState.hotspotDecription}
-            </Text>
+            <View style={{ flex: 3 }}>
+              <Text>{textCardState.summaryValues.hotspotDescription}</Text>
+            </View>
+            <View style={styles.rightAlignContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleOpenningEditting('hotspotDescription');
+                }}
+                style={styles.editButton}
+              >
+                <Text style={styles.textStyle}>Edit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.cardContainer}>
             <Text style={styles.cardHeader}>Other Notes</Text>
-            <Text style={styles.cardBody}>{initialSurveyState.otherNotes}</Text>
+            <View style={{ flex: 3 }}>
+              <Text>{textCardState.summaryValues.otherNotes}</Text>
+            </View>
+            <View style={styles.rightAlignContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  handleOpenningEditting('otherNotes');
+                }}
+                style={styles.editButton}
+              >
+                <Text style={styles.textStyle}>Edit</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       )}
@@ -232,41 +333,14 @@ const SummaryScreen = (props) => {
         />
       </View>
       {/* Editing Modal */}
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={editModalVisible}
-        onRequestClose={() => setEditModalVisible(!editModalVisible)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={{ flex: 3, backgroundColor: 'blue' }}>
-              <View>
-                <Text>Title</Text>
-              </View>
-              <TextInput
-                style={{
-                  width: DEVICE_WIDTH / 1.5,
-                  backgroundColor: 'red',
-                }}
-                multiline
-                // change these to be dynamic
-                onChangeText={setCultivarText}
-                value={cultivarText}
-              />
-            </View>
-            {/* Save Button */}
-            <View style={styles.rightAlignContainer}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => setEditModalVisible(!editModalVisible)}
-              >
-                <Text>Save</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <EditModal
+        modalVisible={editModalVisible}
+        setModalVisible={setEditModalVisible}
+        //need to be varibles
+        cardHeader={textCardState.editModal.header}
+        initialText={textCardState.editModal.text}
+        savingCallback={handleSaving}
+      />
     </SafeAreaView>
   );
 };

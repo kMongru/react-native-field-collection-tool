@@ -7,7 +7,7 @@ const initialState = {
   },
   barcode: '',
   crop: '',
-  cultivar: 'This a test value',
+  cultivar: '',
   controlMethods: '',
   hotspotDecription: '',
   otherNotes: '',
@@ -26,9 +26,19 @@ const surveyReducer = (state = initialState, action) => {
         ...state,
         ...contents,
       };
+    //will reset everything except the inputformscreen information for usePrevious implementation
     case RESET_CONTENTS:
+      const retainedInfo = {
+        crop: state.crop,
+        cultivar: state.cultivar,
+        controlMethods: state.controlMethods,
+        hotspotDecription: state.hotspotDecription,
+        otherNotes: state.otherNotes,
+      };
+
       return {
         ...initialState,
+        ...retainedInfo,
       };
 
     default:
