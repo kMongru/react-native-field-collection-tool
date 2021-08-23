@@ -15,6 +15,7 @@ import Colors from '../constants/Colors';
 import { DEVICE_WIDTH } from '../constants/Screen';
 
 const EditModal = (props) => {
+  //destructuring props
   const {
     modalVisible,
     setModalVisible,
@@ -50,7 +51,10 @@ const EditModal = (props) => {
             <View style={styles.textContainer}>
               <TextInput
                 style={{ width: DEVICE_WIDTH / 1.25, color: 'white' }}
+                blurOnSubmit
                 multiline
+                keyboardType='default'
+                autoCapitalize='none'
                 onChangeText={setText}
                 value={text}
               />

@@ -91,7 +91,6 @@ const CameraScreen = (props) => {
       console.log(data.uri);
       //adding to the end of the array
       setImageRoll([...imageRoll, data.uri]);
-      console.log(imageRoll);
     }
   };
 
@@ -117,7 +116,6 @@ const CameraScreen = (props) => {
   const handleDeletedImage = (imageUri) => {
     setImageRoll((prev) => {
       const filteredArray = prev.filter((val, index) => val != imageUri);
-      console.log(filteredArray);
       return filteredArray;
     });
   };

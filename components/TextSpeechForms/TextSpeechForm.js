@@ -23,10 +23,12 @@ import Colors from '../../constants/Colors';
 */
 
 const TextSpeechForm = (props) => {
+  const { initialValue } = props;
+
   const [confirmed, setConfirmed] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [text, setText] = useState('');
+  const [text, setText] = useState(initialValue);
   const [audioMode, setAudioMode] = useState(false);
 
   const [value, setValue] = useState(null);
@@ -47,6 +49,11 @@ const TextSpeechForm = (props) => {
     setValue(uri);
     setConfirmed(isValid);
   };
+
+  //rerenders the component based on changes to the inital value (ie. if usePrevious is pressed)
+  useEffect(() => {
+    initialValue != null ? setText(initialValue) : null;
+  }, [initialValue]);
 
   useEffect(() => {
     handleInputForm(id, value, confirmed);

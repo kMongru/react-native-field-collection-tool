@@ -9,7 +9,7 @@ const initialState = {
   crop: '',
   cultivar: '',
   controlMethods: '',
-  hotspotDecription: '',
+  hotspotDescription: '',
   otherNotes: '',
   images: [],
   latitude: '',

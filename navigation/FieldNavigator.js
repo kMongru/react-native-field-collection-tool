@@ -43,7 +43,7 @@ const SurveyStackNavigator = createStackNavigator();
 export const SurveyNavigator = () => {
   return (
     <SurveyStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      {/* <SurveyStackNavigator.Screen
+      <SurveyStackNavigator.Screen
         name='Home'
         component={HomeScreen}
         options={homeScreenOptions}
@@ -82,7 +82,7 @@ export const SurveyNavigator = () => {
         name='Location'
         component={LocationScreen}
         options={locationScreenOptions}
-      /> */}
+      />
       <SurveyStackNavigator.Screen
         name='Summary'
         component={SummaryScreen}

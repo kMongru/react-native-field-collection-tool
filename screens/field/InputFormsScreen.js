@@ -4,9 +4,7 @@ import {
   SafeAreaView,
   Text,
   StyleSheet,
-  ScrollView,
   Dimensions,
-  KeyboardAvoidingView,
   Pressable,
   Image,
   Platform,
@@ -29,6 +27,7 @@ import Colors from '../../constants/Colors';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+const USE_PREVIOUS_UPDATE = 'USE_PREVIOUS_UPDATE';
 
 const inputFormReducer = (state, action) => {
   switch (action.type) {
@@ -56,14 +55,33 @@ const inputFormReducer = (state, action) => {
         inputValues: updatedValues,
       };
 
+    case USE_PREVIOUS_UPDATE:
+      //used to set all text/audio inputs valities to true
+      const trueValidities = {
+        ...state.inputValidities,
+      };
+
+      for (const key in trueValidities) {
+        trueValidities[key] = true;
+      }
+
+      return {
+        ...state,
+        formIsValid: true,
+        inputValidities: trueValidities,
+      };
+
     default:
       return state;
   }
 };
 
 const InputFormsScreen = (props) => {
-  //entire screen state, may be removed
+  //entire screen state
   const [isCompleted, setCompleted] = useState(false);
+
+  //checking for usePrevious
+  const [usePrevious, setUsePrevious] = useState(false);
 
   //information header button
   const [modalVisible, setModalVisible] = useState(false);
@@ -73,6 +91,7 @@ const InputFormsScreen = (props) => {
 
   //presetting the information for usePrevious button
   const presetState = useSelector((state) => state.survey);
+  let hasRetainedInformation = presetState.cultivar != '';
 
   const multipleChoiceState = useSelector((state) => state.mc);
 
@@ -100,6 +119,14 @@ const InputFormsScreen = (props) => {
     formIsValid: false,
   });
 
+  //checks if previous information exists then fill it in
+  const handleRetainedInformation = () => {
+    setUsePrevious(true);
+    dispatchFormState({
+      type: USE_PREVIOUS_UPDATE,
+    });
+  };
+
   //getting values (text or uri) from children textSpeechForm component
   const handleInputForm = useCallback(
     (inputIndentifier, inputValue, inputValidity) => {
@@ -125,14 +152,6 @@ const InputFormsScreen = (props) => {
     [dispatchFormState]
   );
 
-  const fillRetainedInformation = (identifier) => {
-    if (presetState.cultivar != '') {
-      //setting the value prop of the input fields to an inital values
-      return presetState[identifier];
-    }
-    return '';
-  };
-
   //determining if the entire screen is completed
   useEffect(() => {
     multipleChoiceState.formIsValid && inputFormState.formIsValid
@@ -148,7 +167,7 @@ const InputFormsScreen = (props) => {
           crop: multipleChoiceState.selectedChoice,
           cultivar: inputFormState.inputValues.cultivar,
           controlMethods: inputFormState.inputValues.controlMethods,
-          hotspotDecription: inputFormState.inputValues.hotspotDescription,
+          hotspotDescription: inputFormState.inputValues.hotspotDescription,
           otherNotes: inputFormState.inputValues.otherNotes,
         })
       );
@@ -179,8 +198,31 @@ const InputFormsScreen = (props) => {
             <View style={styles.horizontalAlignment}>
               <Text style={styles.sectionTitles}>Crops</Text>
               {/* Use Previous Button */}
-              <TouchableOpacity onPress={fillRetainedInformation}>
-                <Text>Use Previous</Text>
+              <TouchableOpacity
+                onPress={handleRetainedInformation}
+                style={
+                  hasRetainedInformation
+                    ? {
+                        ...styles.usePreviousContainer,
+                        ...styles.enabledPrevious,
+                      }
+                    : {
+                        ...styles.usePreviousContainer,
+                        ...styles.disabledPrevious,
+                      }
+                }
+                disabled={!hasRetainedInformation}
+                //could add disabled prop and style changes here
+              >
+                <Text
+                  style={
+                    hasRetainedInformation
+                      ? { color: Colors.white }
+                      : { color: Colors.primaryGreen }
+                  }
+                >
+                  Use Previous
+                </Text>
               </TouchableOpacity>
             </View>
             <MultipleChoiceButton
@@ -213,7 +255,7 @@ const InputFormsScreen = (props) => {
               placeHolderText={'A breif description of the cultivar...'}
               modalText={'Can be a simple one line identification!'}
               handleInputForm={handleInputForm}
-              value={fillRetainedInformation}
+              initialValue={usePrevious ? presetState.cultivar : null}
             />
             <TextSpeechForm
               id={'controlMethods'}
@@ -224,6 +266,7 @@ const InputFormsScreen = (props) => {
                 'Please include pesticides used and duration in the previous _ years'
               }
               handleInputForm={handleInputForm}
+              initialValue={usePrevious ? presetState.controlMethods : null}
             />
             <TextSpeechForm
               id={'hotspotDescription'}
@@ -232,6 +275,7 @@ const InputFormsScreen = (props) => {
               placeHolderText={'A breif description of the hotspot...'}
               modalText={'Try to include the ___'}
               handleInputForm={handleInputForm}
+              initialValue={usePrevious ? presetState.hotspotDescription : null}
             />
             <TextSpeechForm
               id={'otherNotes'}
@@ -240,6 +284,7 @@ const InputFormsScreen = (props) => {
               placeHolderText={'Other notes you wish to include (optional)...'}
               modalText={'This may include...'}
               handleInputForm={handleOptionalForm}
+              initialValue={usePrevious ? presetState.otherNotes : null}
             />
           </View>
         </KeyboardAwareScrollView>
@@ -295,6 +340,26 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     overflow: 'hidden',
+  },
+  horizontalAlignment: {
+    width: '95%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  usePreviousContainer: {
+    marginTop: '2%',
+    paddingVertical: '2%',
+    paddingHorizontal: '2%',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  enabledPrevious: {
+    backgroundColor: Colors.primaryGreen,
+    borderColor: Colors.white,
+  },
+  disabledPrevious: {
+    backgroundColor: Colors.secondaryGreen,
+    borderColor: Colors.primaryGreen,
   },
   sectionTitles: {
     color: Colors.white,

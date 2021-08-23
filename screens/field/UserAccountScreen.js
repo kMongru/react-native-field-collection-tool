@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 
 //custom imports
+import NextButton from '../../components/NextButton';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 
@@ -38,9 +39,14 @@ const UserAccountScreen = (props) => {
           <Text style={styles.formInfo}>{userEmail}</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={handleLogout} style={styles.buttonContainer}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <NextButton
+          isDisabled={false}
+          onPress={handleLogout}
+          buttonName={'Logout'}
+          enabledStyle={{ backgroundColor: Colors.darkPurple }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -96,9 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: '10%',
     height: '20%',
-    width: '80%',
-    borderRadius: 25,
-    backgroundColor: Colors.lightPurple,
+    width: '100%',
   },
 });
 

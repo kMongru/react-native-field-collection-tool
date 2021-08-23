@@ -4,8 +4,8 @@ Research Survey Tool for Western University Researchers
 
 notes:
 
-- use previous button
-- summary editting modal
+- summary editting broken
+- going from summary to barcode doesn't reset barcode, going to home does? (not removed from the stack, may need nav params)
 - edit users account screen
 - shipping precedure screen
 
