@@ -35,8 +35,18 @@ const UserAccountScreen = (props) => {
       </View>
       <View style={styles.formContainer}>
         <Text style={styles.formHeader}>Email</Text>
-        <View>
+        <View style={styles.textContainer}>
           <Text style={styles.formInfo}>{userEmail}</Text>
+        </View>
+        <Text style={styles.formHeader}>Password</Text>
+        <View style={styles.textContainer}>
+          {/* need a password here */}
+          <Text style={styles.formInfo}>Temp Password</Text>
+        </View>
+        <Text style={styles.formHeader}>Orginization</Text>
+        <View style={styles.textContainer}>
+          {/* need an orginization here */}
+          <Text style={styles.formInfo}>Temp Orginization</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -76,7 +86,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   formContainer: {
-    flex: 1,
     width: '80%',
     backgroundColor: Colors.backgroundGrey,
     borderRadius: 25,
@@ -93,7 +102,17 @@ const styles = StyleSheet.create({
     shadowRadius: 4.84,
     elevation: 5,
   },
-  formHeader: {},
+  formHeader: {
+    color: Colors.white,
+    fontWeight: '600',
+    marginTop: '3%',
+    fontSize: 16,
+  },
+  textContainer: {
+    marginVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: Colors.primaryGreen,
+  },
   formInfo: {
     color: Colors.white,
   },

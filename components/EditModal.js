@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   TouchableWithoutFeedback,
@@ -29,9 +29,13 @@ const EditModal = (props) => {
 
   //handle save logic to rely text to parent
   const handleSavePress = () => {
-    savingCallback(text);
+    savingCallback(cardHeader, text);
     setModalVisible(!modalVisible);
   };
+
+  useEffect(() => {
+    setText(initialText);
+  }, [initialText]);
 
   return (
     <Modal
@@ -45,7 +49,7 @@ const EditModal = (props) => {
           <View style={styles.modalView}>
             {/* Header */}
             <View style={styles.headerContainer}>
-              <Text style={styles.cardHeader}>{cardHeader}</Text>
+              <Text style={styles.cardHeader}>Editing {cardHeader}</Text>
             </View>
             {/* Text Input */}
             <View style={styles.textContainer}>
@@ -68,12 +72,6 @@ const EditModal = (props) => {
                 buttonName='Save'
                 enabledStyle={styles.saveButton}
               />
-              {/* <TouchableOpacity
-                style={styles.saveButton}
-                onPress={handleSavePress}
-              >
-                <Text>Save</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -97,8 +95,8 @@ const styles = StyleSheet.create({
   modalView: {
     flex: 1,
     width: DEVICE_WIDTH,
-    backgroundColor: Colors.backgroundGrey,
-    marginTop: '30%',
+    backgroundColor: Colors.background,
+    marginTop: '20%',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     padding: 10,
@@ -114,10 +112,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 3,
-    backgroundColor: '#7C8386',
+    backgroundColor: Colors.backgroundGrey,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: Colors.primaryGreen,
+    padding: 10,
   },
   rightAlignContainer: {
     flex: 1,

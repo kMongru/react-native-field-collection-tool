@@ -2,12 +2,10 @@
 
 Research Survey Tool for Western University Researchers
 
-notes:
+//Bugs
 
-- summary editting broken
 - going from summary to barcode doesn't reset barcode, going to home does? (not removed from the stack, may need nav params)
-- edit users account screen
-- shipping precedure screen
+- edit modal text doesn't refresh with new text, retains the previous input text as the inital text (edit modal header working and saves information correctly)
 
 //Next Steps
 

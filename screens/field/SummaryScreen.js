@@ -64,6 +64,9 @@ const SummaryScreen = (props) => {
   //ediiting modal
   const [editModalVisible, setEditModalVisible] = useState(false);
 
+  const [modalHeader, setModalHeader] = useState('');
+  const [modalText, setModalText] = useState('');
+
   const dispatch = useDispatch();
 
   //inital survey state
@@ -99,11 +102,10 @@ const SummaryScreen = (props) => {
 
   //saves the edited information from the edit
   const handleSaving = useCallback(
-    (inputValue) => {
-      console.log(inputValue);
+    (identifier, inputValue) => {
       dispatchCardState({
         type: SAVE_INFORMATION,
-        input: textCardState.editModal.header,
+        input: identifier,
         value: inputValue,
       });
     },
@@ -142,6 +144,11 @@ const SummaryScreen = (props) => {
     setModalVisible(false);
     props.navigation.navigate('BarcodeScanning');
   };
+
+  // useEffect(()=> {
+  //   setModalHeader()
+  //   setModalText()
+  // }, [textCardState.editModal])
 
   //allowing header component to interact with screen components
   useEffect(() => {
