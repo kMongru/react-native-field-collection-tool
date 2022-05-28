@@ -29,3 +29,6 @@ This repository is the mobile frontend of a collection system for research into 
 
 
 Here's a **[link](https://drive.google.com/file/d/1OZXzRnDZ1_5AE-RaDja-asI5yj0y6Ibb/view)** to a quick walkthrough of the application!
+
+### License
+[MIT](https://choosealicense.com/licenses/mit/)
