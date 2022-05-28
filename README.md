@@ -11,14 +11,17 @@ This repository is the mobile frontend of a collection system for research into 
 | Lab Technician | A person working at Western University that directly interacts and performs required analysis of TSSM samples. Maintains and updates the local server that host the primary database. |
 | Environment Canada | A database that holds a collection of climate data for a better understanding of the TSSM environment. |
 
-#### Use Cases
+#### System Use Cases
+
+| Use Case | Description | Status |
+| ----- | ----------- | ------ |
+| Lab Technicians and Growers Logins | Seperate user flows behind login page to control information security.  | Complete |
+| Collect TSSM Samples and Information | Provides the ability for Growers to enter all required information about the sample which will be linked to the barcode of the sample bag. This will include: an image of the hotspot of the TSSM within the greenhouse, timestamp and GPS location, an audio message for additional information, such as prior crop control and a unique Grower Id | Complete |
+| Report Issue Screen | During the initial testing an issue reporting screen will be required for colidating issues for the devolpment team to review.  | Complete |
+| Register for Clearance | Lab Technicians will be required to create a secure profile request that will be validated by the TSSM Management Admin team. | Lab Side |
+| Maintain and Updating Sample Inventory | Provides the ability to scan new barcodes in the lab (plastic bags, test tubes, etc) into the database system along with a optional description. Additional barcode scanning will allow lab technicians to modify and maintain information regarding the barcode. | Lab Side |
+| Creating and Storing Barcodes | Provides the ability for lab technicians to print bar codes that are automatically stored into the database system. Which they can then attached to samples.   | Lab Side |
 
 
 ### Demo
 Here's a **[link](https://drive.google.com/file/d/1OZXzRnDZ1_5AE-RaDja-asI5yj0y6Ibb/view)** to a quick walkthrough of the application!
-
-### Next Steps
-- add lab side features
-- implement auth into backend, need to save more values about user profiles (orginization, name)
-- implement ReportIssueScreen, BarcodeScanningScreen, SummaryScreen into backend
-- audio to text feature, make it editable in the summary page
