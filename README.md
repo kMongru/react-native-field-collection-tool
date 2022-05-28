@@ -1,4 +1,4 @@
-## Research Survey Tool for Western University Researchers
+## Mobile Survey Tool for Western University Researchers
 
 ### Project Description
 This repository is the mobile frontend of a collection system for research into Ontario mite infestations. 
