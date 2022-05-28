@@ -23,5 +23,9 @@ This repository is the mobile frontend of a collection system for research into 
 | Creating and Storing Barcodes | Provides the ability for lab technicians to print bar codes that are automatically stored into the database system. Which they can then attached to samples.   | Lab Side |
 
 
-### Demo
+### Screenshots & Demo
+<img src="/screenshots/Login Screen.png" width=200vw/> <img src="/screenshots/Home Screen.png" width=200vw /> <img src="/screenshots/Barcode.png" width=200vw /> <img src="/screenshots/Selection Screen.png" width=200vw />
+
+
+
 Here's a **[link](https://drive.google.com/file/d/1OZXzRnDZ1_5AE-RaDja-asI5yj0y6Ibb/view)** to a quick walkthrough of the application!
